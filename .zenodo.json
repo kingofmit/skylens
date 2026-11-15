@@ -1,0 +1,30 @@
+{
+  "title": "SkyLens: Open-Source Flight Data Visualization and Replay Toolkit",
+  "description": "SkyLens is an open-source toolkit for visualizing and replaying flight data from ADS-B surveillance sources. It provides 3D flight path rendering, airspace density heatmaps, airport surface movement animations, and real-time data streaming — serving as the visualization companion to FlightDNA's analytics engine.",
+  "creators": [
+    {
+      "name": "Allem, Ahmed",
+      "orcid": "0009-0003-4937-5858",
+      "affiliation": "Massachusetts Institute of Technology"
+    }
+  ],
+  "upload_type": "software",
+  "license": "MIT",
+  "keywords": [
+    "flight visualization",
+    "ADS-B",
+    "3D flight paths",
+    "airspace heatmap",
+    "aviation",
+    "TypeScript",
+    "open source"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/kingofmit/skylens",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@skylens/heatmap",
+  "version": "0.1.0",
+  "description": "Airspace density heatmaps, grid aggregation, and kernel density estimation.",
+  "author": "Ahmed Allem",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist", "lint": "tsc --noEmit" },
+  "dependencies": { "@skylens/core": "workspace:*" },
+  "devDependencies": { "typescript": "^5.8.0" }
+}
