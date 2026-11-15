@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">
+  <a href="https://doi.org/10.5281/zenodo.24243356"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24243356.svg" alt="DOI" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" /></a>
   <img src="https://img.shields.io/badge/typescript-strict-blue" alt="TypeScript" />
   <img src="https://img.shields.io/badge/ADS--B-ready-blueviolet" alt="ADS-B" />
