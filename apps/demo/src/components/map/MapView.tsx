@@ -1,0 +1,679 @@
+import { useRef, useEffect, useMemo, useState } from "react";
+import maplibregl from "maplibre-gl";
+import type { FlightTrack, BoundingBox } from "@skylens/core";
+import { haversineDistance, bearing, greatCircleArc } from "@skylens/core";
+import { useMap } from "../../hooks/useMap";
+import type { SyntheticData } from "../../data/synthetic";
+import type { UseReplayReturn } from "../../hooks/useReplay";
+
+import { getFlightPathGeoJSON, getPhaseSegmentedGeoJSON } from "./FlightPathLayer";
+import { getHeatmapGeoJSON, type HeatmapMode } from "./HeatmapLayer";
+import { getAirspaceGeoJSON } from "./AirspaceLayer";
+import { getWeatherGeoJSON } from "./WeatherLayer";
+import { getAirportGeoJSON } from "./AirportLayer";
+import { getMarkerGeoJSON } from "./MarkerLayer";
+import { getTileDebugGeoJSON } from "./TileDebugLayer";
+
+type Tab = "flights" | "airport" | "weather" | "analytics";
+
+interface MapViewProps {
+  tab: Tab;
+  data: SyntheticData;
+  selectedFlight: string | null;
+  heatmapMode: HeatmapMode;
+  showAirspace: boolean;
+  showTileDebug: boolean;
+  replay: UseReplayReturn;
+}
+
+/* ── Layer IDs ─────────────────────────────────────────────────────── */
+
+const LAYER_IDS = {
+  flightPaths: "flight-paths",
+  flightPathsPhase: "flight-paths-phase",
+  aircraft: "aircraft-points",
+  holding: "holding-markers",
+  waypoints: "waypoint-markers",
+  waypointLabels: "waypoint-labels",
+  crossings: "crossing-markers",
+  airspace: "airspace-fill",
+  airspaceOutline: "airspace-outline",
+  heatmap: "heatmap-layer",
+  tileDebug: "tile-debug",
+  tileDebugOutline: "tile-debug-outline",
+  greatCircle: "great-circle-arcs",
+  // Airport
+  surfacePaths: "surface-paths",
+  runways: "runways",
+  gates: "gate-markers",
+  gateLabels: "gate-labels",
+  // Weather
+  windBarbs: "wind-barbs",
+  metarStations: "metar-stations",
+  sigmets: "sigmet-fill",
+  sigmetOutline: "sigmet-outline",
+  pireps: "pirep-markers",
+  // Analytics
+  healthPath: "health-path",
+  anomalyMarkers: "anomaly-markers",
+} as const;
+
+const ALL_LAYER_IDS = Object.values(LAYER_IDS);
+
+/* ── Helpers ──────────────────────────────────────────────────────── */
+
+function getSourceId(layerId: string) {
+  return `${layerId}-src`;
+}
+
+function safeSetData(map: maplibregl.Map, sourceId: string, data: GeoJSON.FeatureCollection) {
+  const src = map.getSource(sourceId) as maplibregl.GeoJSONSource | undefined;
+  if (src) {
+    src.setData(data);
+  }
+}
+
+function removeLayers(map: maplibregl.Map) {
+  for (const id of ALL_LAYER_IDS) {
+    if (map.getLayer(id)) map.removeLayer(id);
+    const srcId = getSourceId(id);
+    if (map.getSource(srcId)) map.removeSource(srcId);
+  }
+}
+
+function addSourceAndLayer(
+  map: maplibregl.Map,
+  layerId: string,
+  data: GeoJSON.FeatureCollection,
+  layerDef: Omit<maplibregl.LayerSpecification, "id" | "source"> & Record<string, unknown>,
+) {
+  const srcId = getSourceId(layerId);
+  if (!map.getSource(srcId)) {
+    map.addSource(srcId, { type: "geojson", data });
+  }
+  if (!map.getLayer(layerId)) {
+    map.addLayer({ ...layerDef, id: layerId, source: srcId } as maplibregl.LayerSpecification);
+  }
+}
+
+/* ── Component ─────────────────────────────────────────────────────── */
+
+export function MapView({
+  tab,
+  data,
+  selectedFlight,
+  heatmapMode,
+  showAirspace,
+  showTileDebug,
+  replay,
+}: MapViewProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { map, loaded } = useMap(containerRef);
+  const [hoverInfo, setHoverInfo] = useState<{ lat: number; lon: number; dist: string; brg: string } | null>(null);
+  const prevTabRef = useRef<Tab>(tab);
+
+  // Build great-circle arcs for flights tab
+  const arcGeoJSON = useMemo<GeoJSON.FeatureCollection>(() => {
+    const features: GeoJSON.Feature[] = [];
+    // Build arcs for first/last state of each track
+    for (const track of data.tracks) {
+      const { states } = track;
+      if (states.length < 2) continue;
+      const first = states[0];
+      const last = states[states.length - 1];
+      const arcPts = greatCircleArc(first.latitude, first.longitude, last.latitude, last.longitude, 64);
+      features.push({
+        type: "Feature",
+        properties: { icao24: track.icao24, callsign: track.callsign },
+        geometry: {
+          type: "LineString",
+          coordinates: arcPts.map((p) => [p.lon, p.lat]),
+        },
+      });
+    }
+    return { type: "FeatureCollection", features };
+  }, [data.tracks]);
+
+  // Set up hover handler for distance/bearing info
+  useEffect(() => {
+    if (!map || !loaded) return;
+
+    let refPoint: { lat: number; lon: number } | null = null;
+
+    const onMouseMove = (e: maplibregl.MapMouseEvent) => {
+      const { lng, lat } = e.lngLat;
+      if (refPoint) {
+        const dist = haversineDistance(refPoint.lat, refPoint.lon, lat, lng);
+        const brg = bearing(refPoint.lat, refPoint.lon, lat, lng);
+        setHoverInfo({
+          lat,
+          lon: lng,
+          dist: dist > 1000 ? `${(dist / 1000).toFixed(1)} km` : `${Math.round(dist)} m`,
+          brg: `${brg.toFixed(1)}°`,
+        });
+      } else {
+        setHoverInfo(null);
+      }
+    };
+
+    const onClick = (e: maplibregl.MapMouseEvent) => {
+      const { lng, lat } = e.lngLat;
+      if (refPoint) {
+        refPoint = null;
+        setHoverInfo(null);
+      } else {
+        refPoint = { lat, lon: lng };
+      }
+    };
+
+    map.on("mousemove", onMouseMove);
+    map.on("click", onClick);
+    return () => {
+      map.off("mousemove", onMouseMove);
+      map.off("click", onClick);
+    };
+  }, [map, loaded]);
+
+  // Main effect: set up / update layers when props change
+  useEffect(() => {
+    if (!map || !loaded) return;
+
+    // Remove all managed layers on tab change to prevent conflicts
+    if (prevTabRef.current !== tab) {
+      removeLayers(map);
+      prevTabRef.current = tab;
+    }
+
+    switch (tab) {
+      case "flights":
+        setupFlightsLayers(map, data, selectedFlight, heatmapMode, showAirspace, showTileDebug, arcGeoJSON);
+        break;
+      case "airport":
+        setupAirportLayers(map, data);
+        break;
+      case "weather":
+        setupWeatherLayers(map, data);
+        break;
+      case "analytics":
+        setupAnalyticsLayers(map, data);
+        break;
+    }
+  }, [map, loaded, tab, data, selectedFlight, heatmapMode, showAirspace, showTileDebug, arcGeoJSON]);
+
+  return (
+    <div className="absolute inset-0">
+      <div ref={containerRef} className="w-full h-full" />
+
+      {/* Distance/bearing overlay */}
+      {hoverInfo && (
+        <div className="absolute top-2 right-2 bg-gray-900/80 backdrop-blur text-xs text-gray-200 px-3 py-2 rounded shadow pointer-events-none z-10">
+          <div>Lat: {hoverInfo.lat.toFixed(5)}</div>
+          <div>Lon: {hoverInfo.lon.toFixed(5)}</div>
+          <div>Dist: {hoverInfo.dist}</div>
+          <div>Brg: {hoverInfo.brg}</div>
+        </div>
+      )}
+
+      {/* Tab indicator badge */}
+      <div className="absolute bottom-2 left-2 bg-gray-900/70 text-xs text-gray-400 px-2 py-1 rounded pointer-events-none z-10">
+        {tab.charAt(0).toUpperCase() + tab.slice(1)} View
+      </div>
+    </div>
+  );
+}
+
+/* ── Layer setup per tab ──────────────────────────────────────────── */
+
+function setupFlightsLayers(
+  map: maplibregl.Map,
+  data: SyntheticData,
+  selectedFlight: string | null,
+  heatmapMode: HeatmapMode,
+  showAirspace: boolean,
+  showTileDebug: boolean,
+  arcGeoJSON: GeoJSON.FeatureCollection,
+) {
+  // Phase-colored flight paths
+  const phaseGJ = getPhaseSegmentedGeoJSON(data.tracks);
+  if (map.getSource(getSourceId(LAYER_IDS.flightPathsPhase))) {
+    safeSetData(map, getSourceId(LAYER_IDS.flightPathsPhase), phaseGJ);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.flightPathsPhase, phaseGJ, {
+      type: "line",
+      paint: {
+        "line-color": ["get", "color"],
+        "line-width": ["case", ["==", ["get", "icao24"], selectedFlight ?? ""], 4, 2],
+        "line-opacity": 0.85,
+      },
+    });
+  }
+
+  // Aircraft position markers
+  const pathGJ = getFlightPathGeoJSON(data.tracks, selectedFlight);
+  const aircraftGJ: GeoJSON.FeatureCollection = {
+    type: "FeatureCollection",
+    features: pathGJ.features.filter((f) => f.properties?.type === "aircraft"),
+  };
+  if (map.getSource(getSourceId(LAYER_IDS.aircraft))) {
+    safeSetData(map, getSourceId(LAYER_IDS.aircraft), aircraftGJ);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.aircraft, aircraftGJ, {
+      type: "circle",
+      paint: {
+        "circle-radius": ["case", ["==", ["get", "selected"], true], 8, 5],
+        "circle-color": "#f59e0b",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  }
+
+  // Great-circle arcs
+  if (map.getSource(getSourceId(LAYER_IDS.greatCircle))) {
+    safeSetData(map, getSourceId(LAYER_IDS.greatCircle), arcGeoJSON);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.greatCircle, arcGeoJSON, {
+      type: "line",
+      paint: {
+        "line-color": "#6366f1",
+        "line-width": 1,
+        "line-dasharray": [4, 4],
+        "line-opacity": 0.5,
+      },
+    });
+  }
+
+  // Markers (holding, waypoints, crossings)
+  const markers = getMarkerGeoJSON(
+    data.tracks,
+    data.waypointFixes,
+    data.airspaceBoundaries,
+    data.flightDNAMetrics,
+  );
+
+  // Holding pattern markers
+  if (map.getSource(getSourceId(LAYER_IDS.holding))) {
+    safeSetData(map, getSourceId(LAYER_IDS.holding), markers.holdingPatterns);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.holding, markers.holdingPatterns, {
+      type: "circle",
+      paint: {
+        "circle-radius": 12,
+        "circle-color": "#ec4899",
+        "circle-opacity": 0.6,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ec4899",
+      },
+    });
+  }
+
+  // Waypoint markers
+  if (map.getSource(getSourceId(LAYER_IDS.waypoints))) {
+    safeSetData(map, getSourceId(LAYER_IDS.waypoints), markers.waypoints);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.waypoints, markers.waypoints, {
+      type: "circle",
+      paint: {
+        "circle-radius": 5,
+        "circle-color": "#10b981",
+        "circle-stroke-width": 1,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  }
+
+  // Waypoint labels
+  if (map.getSource(getSourceId(LAYER_IDS.waypointLabels))) {
+    safeSetData(map, getSourceId(LAYER_IDS.waypointLabels), markers.waypoints);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.waypointLabels, markers.waypoints, {
+      type: "symbol",
+      layout: {
+        "text-field": ["get", "name"],
+        "text-size": 10,
+        "text-offset": [0, 1.2],
+        "text-anchor": "top",
+      },
+      paint: {
+        "text-color": "#a7f3d0",
+        "text-halo-color": "#000000",
+        "text-halo-width": 1,
+      },
+    });
+  }
+
+  // Sector crossings
+  if (map.getSource(getSourceId(LAYER_IDS.crossings))) {
+    safeSetData(map, getSourceId(LAYER_IDS.crossings), markers.crossings);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.crossings, markers.crossings, {
+      type: "circle",
+      paint: {
+        "circle-radius": 6,
+        "circle-color": [
+          "case",
+          ["==", ["get", "type"], "sector_entry"],
+          "#22c55e",
+          "#ef4444",
+        ],
+        "circle-stroke-width": 1,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  }
+
+  // Airspace
+  const airspaceGJ = showAirspace
+    ? getAirspaceGeoJSON(data.airspaceBoundaries)
+    : { type: "FeatureCollection" as const, features: [] };
+
+  if (map.getSource(getSourceId(LAYER_IDS.airspace))) {
+    safeSetData(map, getSourceId(LAYER_IDS.airspace), airspaceGJ);
+    safeSetData(map, getSourceId(LAYER_IDS.airspaceOutline), airspaceGJ);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.airspace, airspaceGJ, {
+      type: "fill",
+      paint: {
+        "fill-color": "#8b5cf6",
+        "fill-opacity": 0.1,
+      },
+    });
+    addSourceAndLayer(map, LAYER_IDS.airspaceOutline, airspaceGJ, {
+      type: "line",
+      paint: {
+        "line-color": "#8b5cf6",
+        "line-width": 1.5,
+        "line-opacity": 0.6,
+        "line-dasharray": [4, 2],
+      },
+    });
+  }
+
+  // Heatmap
+  const heatmapGJ = getHeatmapGeoJSON(data.tracks, heatmapMode);
+  if (map.getSource(getSourceId(LAYER_IDS.heatmap))) {
+    safeSetData(map, getSourceId(LAYER_IDS.heatmap), heatmapGJ);
+    // Toggle visibility
+    map.setLayoutProperty(
+      LAYER_IDS.heatmap,
+      "visibility",
+      heatmapMode === "none" ? "none" : "visible",
+    );
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.heatmap, heatmapGJ, {
+      type: "heatmap",
+      layout: {
+        visibility: heatmapMode === "none" ? "none" : "visible",
+      },
+      paint: {
+        "heatmap-weight": ["get", "weight"],
+        "heatmap-intensity": 1,
+        "heatmap-radius": 30,
+        "heatmap-opacity": 0.6,
+        "heatmap-color": [
+          "interpolate",
+          ["linear"],
+          ["heatmap-density"],
+          0, "rgba(0,0,255,0)",
+          0.2, "rgba(0,255,0,0.4)",
+          0.5, "rgba(255,255,0,0.6)",
+          0.8, "rgba(255,128,0,0.8)",
+          1, "rgba(255,0,0,0.9)",
+        ],
+      },
+    });
+  }
+
+  // Tile debug
+  setupTileDebug(map, showTileDebug);
+}
+
+function setupAirportLayers(map: maplibregl.Map, data: SyntheticData) {
+  const airportGJ = getAirportGeoJSON(data.surfaceTracks, data.airport);
+
+  // Surface paths
+  if (map.getSource(getSourceId(LAYER_IDS.surfacePaths))) {
+    safeSetData(map, getSourceId(LAYER_IDS.surfacePaths), airportGJ.surfacePaths);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.surfacePaths, airportGJ.surfacePaths, {
+      type: "line",
+      paint: {
+        "line-color": "#f59e0b",
+        "line-width": 2,
+        "line-opacity": 0.8,
+      },
+    });
+  }
+
+  // Runways
+  if (map.getSource(getSourceId(LAYER_IDS.runways))) {
+    safeSetData(map, getSourceId(LAYER_IDS.runways), airportGJ.runways);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.runways, airportGJ.runways, {
+      type: "line",
+      paint: {
+        "line-color": "#ffffff",
+        "line-width": 6,
+        "line-opacity": 0.7,
+      },
+    });
+  }
+
+  // Gates
+  if (map.getSource(getSourceId(LAYER_IDS.gates))) {
+    safeSetData(map, getSourceId(LAYER_IDS.gates), airportGJ.gates);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.gates, airportGJ.gates, {
+      type: "circle",
+      paint: {
+        "circle-radius": 6,
+        "circle-color": "#3b82f6",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  }
+
+  // Gate labels
+  if (map.getSource(getSourceId(LAYER_IDS.gateLabels))) {
+    safeSetData(map, getSourceId(LAYER_IDS.gateLabels), airportGJ.gates);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.gateLabels, airportGJ.gates, {
+      type: "symbol",
+      layout: {
+        "text-field": ["get", "name"],
+        "text-size": 10,
+        "text-offset": [0, 1.2],
+        "text-anchor": "top",
+      },
+      paint: {
+        "text-color": "#93c5fd",
+        "text-halo-color": "#000000",
+        "text-halo-width": 1,
+      },
+    });
+  }
+
+  // Fly to airport center
+  map.flyTo({
+    center: [data.airport.center.lon, data.airport.center.lat],
+    zoom: 13,
+    duration: 1000,
+  });
+}
+
+function setupWeatherLayers(map: maplibregl.Map, data: SyntheticData) {
+  const weatherGJ = getWeatherGeoJSON(data.metarStrings, data.sigmetGeoJSON, data.pirepStrings);
+
+  // Wind barb / METAR station markers
+  if (map.getSource(getSourceId(LAYER_IDS.windBarbs))) {
+    safeSetData(map, getSourceId(LAYER_IDS.windBarbs), weatherGJ.windBarbs);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.windBarbs, weatherGJ.windBarbs, {
+      type: "circle",
+      filter: ["==", ["get", "type"], "wind_barb"],
+      paint: {
+        "circle-radius": 4,
+        "circle-color": "#60a5fa",
+        "circle-stroke-width": 1,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  }
+
+  // METAR station labels
+  const metarStations: GeoJSON.FeatureCollection = {
+    type: "FeatureCollection",
+    features: weatherGJ.windBarbs.features.filter((f) => f.properties?.type === "metar_station"),
+  };
+  if (map.getSource(getSourceId(LAYER_IDS.metarStations))) {
+    safeSetData(map, getSourceId(LAYER_IDS.metarStations), metarStations);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.metarStations, metarStations, {
+      type: "symbol",
+      layout: {
+        "text-field": ["concat", ["get", "station"], " ", ["get", "category"]],
+        "text-size": 11,
+        "text-offset": [0, 1.5],
+        "text-anchor": "top",
+      },
+      paint: {
+        "text-color": [
+          "match",
+          ["get", "category"],
+          "VFR", "#10b981",
+          "MVFR", "#3b82f6",
+          "IFR", "#ef4444",
+          "LIFR", "#7c3aed",
+          "#ffffff",
+        ],
+        "text-halo-color": "#000000",
+        "text-halo-width": 1,
+      },
+    });
+  }
+
+  // SIGMET polygons
+  if (map.getSource(getSourceId(LAYER_IDS.sigmets))) {
+    safeSetData(map, getSourceId(LAYER_IDS.sigmets), weatherGJ.sigmets);
+    safeSetData(map, getSourceId(LAYER_IDS.sigmetOutline), weatherGJ.sigmets);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.sigmets, weatherGJ.sigmets, {
+      type: "fill",
+      paint: {
+        "fill-color": "#ef4444",
+        "fill-opacity": 0.15,
+      },
+    });
+    addSourceAndLayer(map, LAYER_IDS.sigmetOutline, weatherGJ.sigmets, {
+      type: "line",
+      paint: {
+        "line-color": "#ef4444",
+        "line-width": 2,
+        "line-dasharray": [4, 2],
+      },
+    });
+  }
+
+  // PIREP markers
+  if (map.getSource(getSourceId(LAYER_IDS.pireps))) {
+    safeSetData(map, getSourceId(LAYER_IDS.pireps), weatherGJ.pireps);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.pireps, weatherGJ.pireps, {
+      type: "circle",
+      paint: {
+        "circle-radius": 7,
+        "circle-color": ["get", "color"],
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+        "circle-opacity": 0.8,
+      },
+    });
+  }
+
+  // Zoom out to see all weather
+  map.flyTo({ center: [-90, 40], zoom: 3, duration: 1000 });
+}
+
+function setupAnalyticsLayers(map: maplibregl.Map, data: SyntheticData) {
+  const markers = getMarkerGeoJSON(
+    data.tracks,
+    data.waypointFixes,
+    data.airspaceBoundaries,
+    data.flightDNAMetrics,
+  );
+
+  // Health-colored path
+  if (map.getSource(getSourceId(LAYER_IDS.healthPath))) {
+    safeSetData(map, getSourceId(LAYER_IDS.healthPath), markers.healthPath);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.healthPath, markers.healthPath, {
+      type: "line",
+      paint: {
+        "line-color": ["get", "color"],
+        "line-width": 4,
+        "line-opacity": 0.9,
+      },
+    });
+  }
+
+  // Anomaly markers
+  if (map.getSource(getSourceId(LAYER_IDS.anomalyMarkers))) {
+    safeSetData(map, getSourceId(LAYER_IDS.anomalyMarkers), markers.anomalyMarkers);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.anomalyMarkers, markers.anomalyMarkers, {
+      type: "circle",
+      paint: {
+        "circle-radius": 8,
+        "circle-color": "#ef4444",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+        "circle-opacity": 0.8,
+      },
+    });
+  }
+
+  // Zoom to the first track
+  if (data.tracks.length > 0) {
+    const states = data.tracks[0].states;
+    if (states.length > 0) {
+      const mid = states[Math.floor(states.length / 2)];
+      map.flyTo({ center: [mid.longitude, mid.latitude], zoom: 5, duration: 1000 });
+    }
+  }
+}
+
+function setupTileDebug(map: maplibregl.Map, show: boolean) {
+  if (!show) {
+    // Remove tile debug layers if they exist
+    if (map.getLayer(LAYER_IDS.tileDebug)) map.removeLayer(LAYER_IDS.tileDebug);
+    if (map.getLayer(LAYER_IDS.tileDebugOutline)) map.removeLayer(LAYER_IDS.tileDebugOutline);
+    if (map.getSource(getSourceId(LAYER_IDS.tileDebug))) map.removeSource(getSourceId(LAYER_IDS.tileDebug));
+    if (map.getSource(getSourceId(LAYER_IDS.tileDebugOutline))) map.removeSource(getSourceId(LAYER_IDS.tileDebugOutline));
+    return;
+  }
+
+  const bounds = map.getBounds();
+  const zoom = map.getZoom();
+  const bbox: BoundingBox = {
+    minLat: bounds.getSouth(),
+    maxLat: bounds.getNorth(),
+    minLon: bounds.getWest(),
+    maxLon: bounds.getEast(),
+  };
+
+  const tileGJ = getTileDebugGeoJSON(bbox, zoom);
+
+  if (map.getSource(getSourceId(LAYER_IDS.tileDebugOutline))) {
+    safeSetData(map, getSourceId(LAYER_IDS.tileDebugOutline), tileGJ);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.tileDebugOutline, tileGJ, {
+      type: "line",
+      paint: {
+        "line-color": "#22c55e",
+        "line-width": 0.5,
+        "line-opacity": 0.4,
+      },
+    });
+  }
+}
