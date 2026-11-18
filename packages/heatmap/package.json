@@ -1,6 +1,6 @@
 {
   "name": "@skylens-aviation/heatmap",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Airspace density heatmaps, grid aggregation, and kernel density estimation.",
   "author": "Ahmed Allem",
   "license": "MIT",
@@ -13,7 +13,16 @@
     "url": "https://github.com/kingofmit/skylens.git",
     "directory": "packages/heatmap"
   },
-  "keywords": ["skylens", "flight", "ads-b", "aviation", "heatmap", "density", "kde", "aggregation"],
+  "keywords": [
+    "skylens",
+    "flight",
+    "ads-b",
+    "aviation",
+    "heatmap",
+    "density",
+    "kde",
+    "aggregation"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +32,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

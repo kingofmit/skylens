@@ -1,6 +1,6 @@
 {
   "name": "@skylens-aviation/paths",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "3D flight path rendering, trail effects, and trajectory visualization.",
   "author": "Ahmed Allem",
   "license": "MIT",
@@ -13,7 +13,16 @@
     "url": "https://github.com/kingofmit/skylens.git",
     "directory": "packages/paths"
   },
-  "keywords": ["skylens", "flight", "ads-b", "aviation", "paths", "trajectory", "3d", "visualization"],
+  "keywords": [
+    "skylens",
+    "flight",
+    "ads-b",
+    "aviation",
+    "paths",
+    "trajectory",
+    "3d",
+    "visualization"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +32,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

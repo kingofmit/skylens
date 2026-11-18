@@ -1,6 +1,6 @@
 {
   "name": "@skylens-aviation/airport",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Airport surface movement visualization, runway utilization, taxi analytics, and sequencing.",
   "author": "Ahmed Allem",
   "license": "MIT",
@@ -13,7 +13,16 @@
     "url": "https://github.com/kingofmit/skylens.git",
     "directory": "packages/airport"
   },
-  "keywords": ["skylens", "flight", "ads-b", "aviation", "airport", "runway", "taxi", "surface-movement"],
+  "keywords": [
+    "skylens",
+    "flight",
+    "ads-b",
+    "aviation",
+    "airport",
+    "runway",
+    "taxi",
+    "surface-movement"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +32,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

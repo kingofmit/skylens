@@ -1,6 +1,6 @@
 {
   "name": "@skylens-aviation/airspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Airspace boundary rendering, sector crossing detection, and dwell time computation.",
   "author": "Ahmed Allem",
   "license": "MIT",
@@ -13,7 +13,16 @@
     "url": "https://github.com/kingofmit/skylens.git",
     "directory": "packages/airspace"
   },
-  "keywords": ["skylens", "flight", "ads-b", "aviation", "airspace", "sector", "boundary", "geofence"],
+  "keywords": [
+    "skylens",
+    "flight",
+    "ads-b",
+    "aviation",
+    "airspace",
+    "sector",
+    "boundary",
+    "geofence"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +32,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
