@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { FlightTrack } from "@skylens/core";
-import { flightTracksToGeoJSON } from "@skylens/export";
-import { flightTracksToKML } from "@skylens/export";
-import { stateVectorsToCSV } from "@skylens/export";
-import { flightTracksToCZML } from "@skylens/export";
-import { generateReportData } from "@skylens/export";
+import type { FlightTrack } from "@skylens-aviation/core";
+import { flightTracksToGeoJSON } from "@skylens-aviation/export";
+import { flightTracksToKML } from "@skylens-aviation/export";
+import { stateVectorsToCSV } from "@skylens-aviation/export";
+import { flightTracksToCZML } from "@skylens-aviation/export";
+import { generateReportData } from "@skylens-aviation/export";
 import { downloadBlob, downloadJSON } from "../../lib/download";
 
 type Tab = "flights" | "airport" | "weather" | "analytics";

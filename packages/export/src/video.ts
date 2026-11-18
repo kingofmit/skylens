@@ -1,6 +1,6 @@
-import { StateVector } from "@skylens/core";
+import { StateVector } from "@skylens-aviation/core";
 
-/** A replay frame for export (mirrors ReplayFrame from @skylens/replay) */
+/** A replay frame for export (mirrors ReplayFrame from @skylens-aviation/replay) */
 export interface ExportFrame {
   time: number;
   aircraft: Map<string, StateVector>;

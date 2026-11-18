@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/export",
+  "name": "@skylens-aviation/export",
   "version": "0.1.0",
   "description": "Flight data export to GeoJSON, KML, CSV, and image formats.",
   "author": "Ahmed Allem",
@@ -31,7 +31,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylens/core": "workspace:*"
+    "@skylens-aviation/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

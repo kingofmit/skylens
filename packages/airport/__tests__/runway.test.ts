@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { detectRunwayEvents, runwayUtilization, RunwayDefinition } from "../src/runway";
-import { FlightTrack } from "@skylens/core";
+import { FlightTrack } from "@skylens-aviation/core";
 
 const runways: RunwayDefinition[] = [
   { name: "09L", thresholdLat: 40.64, thresholdLon: -73.79, headingDeg: 90, lengthM: 3000 },

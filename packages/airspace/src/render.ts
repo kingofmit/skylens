@@ -1,4 +1,4 @@
-import { AirspaceBoundary, FlightTrack } from "@skylens/core";
+import { AirspaceBoundary, FlightTrack } from "@skylens-aviation/core";
 import { SectorCrossing } from "./crossings";
 
 /** Convert a single airspace boundary to a GeoJSON Feature */

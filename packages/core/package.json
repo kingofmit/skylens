@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/core",
+  "name": "@skylens-aviation/core",
   "version": "0.1.0",
   "description": "Shared types, coordinate transforms, and data structures for SkyLens.",
   "author": "Ahmed Allem",

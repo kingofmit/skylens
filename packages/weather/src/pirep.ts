@@ -1,4 +1,4 @@
-import { HeatmapCell, BoundingBox } from "@skylens/core";
+import { HeatmapCell, BoundingBox } from "@skylens-aviation/core";
 
 /** Turbulence intensity */
 export type TurbulenceIntensity = "NEG" | "LGT" | "MOD" | "SEV" | "EXTRM";

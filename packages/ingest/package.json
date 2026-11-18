@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/ingest",
+  "name": "@skylens-aviation/ingest",
   "version": "0.1.0",
   "description": "ADS-B data ingestion, OpenSky API client, and flight track assembly.",
   "author": "Ahmed Allem",
@@ -31,7 +31,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylens/core": "workspace:*"
+    "@skylens-aviation/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

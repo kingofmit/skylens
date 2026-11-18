@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import type { FlightTrack } from "@skylens/core";
+import type { FlightTrack } from "@skylens-aviation/core";
 import {
   ReplayEngine,
   ReplayClock,
@@ -8,9 +8,9 @@ import {
   PictureInPicture,
   FrameRecorder,
   generatePhaseEvents,
-} from "@skylens/replay";
-import type { ClockState } from "@skylens/replay";
-import { detectFlightPhases } from "@skylens/ingest";
+} from "@skylens-aviation/replay";
+import type { ClockState } from "@skylens-aviation/replay";
+import { detectFlightPhases } from "@skylens-aviation/ingest";
 
 export interface UseReplayReturn {
   engine: ReplayEngine;

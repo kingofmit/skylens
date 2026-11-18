@@ -1,4 +1,4 @@
-import { haversineDistance } from "@skylens/core";
+import { haversineDistance } from "@skylens-aviation/core";
 import { SurfaceTrack } from "./surface";
 
 /** Inferred gate assignment */

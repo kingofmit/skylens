@@ -10,7 +10,7 @@
 // ---------------------------------------------------------------------------
 // Type-only imports (stripped at compile time, safe for workers)
 // ---------------------------------------------------------------------------
-import type { WorkerTask, WorkerResult } from "@skylens/core";
+import type { WorkerTask, WorkerResult } from "@skylens-aviation/core";
 
 // ---------------------------------------------------------------------------
 // Message protocol types

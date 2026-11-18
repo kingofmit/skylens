@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { FlightTrack } from "@skylens/core";
-import { buildAltitudeProfile } from "@skylens/paths";
+import type { FlightTrack } from "@skylens-aviation/core";
+import { buildAltitudeProfile } from "@skylens-aviation/paths";
 import {
   ResponsiveContainer,
   AreaChart,

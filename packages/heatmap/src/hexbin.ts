@@ -1,4 +1,4 @@
-import { StateVector, BoundingBox, HexBinCell } from "@skylens/core";
+import { StateVector, BoundingBox, HexBinCell } from "@skylens-aviation/core";
 
 /** Build a hex-bin aggregated heatmap */
 export function buildHexBinHeatmap(

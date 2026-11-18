@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { detectFlightPhases, phaseAtTime } from "../src/phases";
-import { FlightTrack, StateVector } from "@skylens/core";
+import { FlightTrack, StateVector } from "@skylens-aviation/core";
 
 function makeTrack(stateData: Partial<StateVector>[]): FlightTrack {
   const states: StateVector[] = stateData.map((d, i) => ({

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { simplifyPath } from "../src/simplify";
-import { Position3D } from "@skylens/core";
+import { Position3D } from "@skylens-aviation/core";
 
 describe("simplifyPath (RDP)", () => {
   it("should not reduce a straight line", () => {

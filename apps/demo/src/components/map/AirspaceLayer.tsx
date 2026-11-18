@@ -1,5 +1,5 @@
-import type { AirspaceBoundary } from "@skylens/core";
-import { airspaceBoundariesToGeoJSON } from "@skylens/airspace";
+import type { AirspaceBoundary } from "@skylens-aviation/core";
+import { airspaceBoundariesToGeoJSON } from "@skylens-aviation/airspace";
 
 /**
  * Wraps airspaceBoundariesToGeoJSON — returns a GeoJSON FeatureCollection

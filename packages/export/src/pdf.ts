@@ -1,5 +1,5 @@
-import { FlightTrack, PhaseSegment } from "@skylens/core";
-import { haversineDistance } from "@skylens/core";
+import { FlightTrack, PhaseSegment } from "@skylens-aviation/core";
+import { haversineDistance } from "@skylens-aviation/core";
 
 /** Input for a flight report */
 export interface FlightReport {

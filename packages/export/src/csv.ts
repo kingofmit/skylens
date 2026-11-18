@@ -1,4 +1,4 @@
-import { FlightTrack, StateVector } from "@skylens/core";
+import { FlightTrack, StateVector } from "@skylens-aviation/core";
 
 export function flightTrackToCSV(track: FlightTrack): string {
   const header = "timestamp,icao24,callsign,latitude,longitude,altitude_ft,ground_speed_kts,track_deg,vertical_rate_fpm,on_ground";

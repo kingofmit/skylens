@@ -1,5 +1,5 @@
-import { FlightTrack } from "@skylens/core";
-import { haversineDistance } from "@skylens/core";
+import { FlightTrack } from "@skylens-aviation/core";
+import { haversineDistance } from "@skylens-aviation/core";
 
 /** A point in an altitude profile (side-view 2D chart) */
 export interface AltitudeProfilePoint {

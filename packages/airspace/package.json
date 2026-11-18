@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/airspace",
+  "name": "@skylens-aviation/airspace",
   "version": "0.1.0",
   "description": "Airspace boundary rendering, sector crossing detection, and dwell time computation.",
   "author": "Ahmed Allem",
@@ -31,7 +31,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylens/core": "workspace:*"
+    "@skylens-aviation/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

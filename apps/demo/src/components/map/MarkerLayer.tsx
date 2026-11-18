@@ -1,9 +1,9 @@
-import type { FlightTrack, AirspaceBoundary, WaypointFix, FlightDNAMetrics } from "@skylens/core";
-import { mapHealthToColor, mapAnomalyToEventMarkers } from "@skylens/core";
-import { detectHoldingPatterns } from "@skylens/paths";
-import { annotateWaypoints } from "@skylens/paths";
-import { detectSectorCrossings } from "@skylens/airspace";
-import { sectorCrossingsToGeoJSON } from "@skylens/airspace";
+import type { FlightTrack, AirspaceBoundary, WaypointFix, FlightDNAMetrics } from "@skylens-aviation/core";
+import { mapHealthToColor, mapAnomalyToEventMarkers } from "@skylens-aviation/core";
+import { detectHoldingPatterns } from "@skylens-aviation/paths";
+import { annotateWaypoints } from "@skylens-aviation/paths";
+import { detectSectorCrossings } from "@skylens-aviation/airspace";
+import { sectorCrossingsToGeoJSON } from "@skylens-aviation/airspace";
 
 /**
  * Build GeoJSON for overlay markers:

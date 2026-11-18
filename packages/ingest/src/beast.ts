@@ -1,4 +1,4 @@
-import { StateVector } from "@skylens/core";
+import { StateVector } from "@skylens-aviation/core";
 
 /** Raw decoded Mode S frame */
 export interface BeastFrame {

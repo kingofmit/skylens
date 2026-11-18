@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { StateVector, BoundingBox } from "@skylens/core";
-import { congestionTimeSeries } from "@skylens/heatmap";
+import type { StateVector, BoundingBox } from "@skylens-aviation/core";
+import { congestionTimeSeries } from "@skylens-aviation/heatmap";
 import {
   ResponsiveContainer,
   LineChart,

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildHexBinHeatmap, normalizeHexBins } from "../src/hexbin";
-import { StateVector } from "@skylens/core";
+import { StateVector } from "@skylens-aviation/core";
 
 const makeState = (lat: number, lon: number): StateVector => ({
   icao24: "test",

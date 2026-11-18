@@ -1,4 +1,4 @@
-import { FlightTrack } from "@skylens/core";
+import { FlightTrack } from "@skylens-aviation/core";
 
 export function flightTrackToKML(track: FlightTrack): string {
   const coords = track.states

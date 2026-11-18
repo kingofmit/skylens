@@ -1,5 +1,5 @@
-import { FlightTrack } from "@skylens/core";
-import { ftToM } from "@skylens/core";
+import { FlightTrack } from "@skylens-aviation/core";
+import { ftToM } from "@skylens-aviation/core";
 
 /** Convert a flight track to a Cesium CZML packet array */
 export function flightTrackToCZML(track: FlightTrack): object[] {

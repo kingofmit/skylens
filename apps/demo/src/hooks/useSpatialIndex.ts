@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { SpatialIndex } from "@skylens/core";
-import type { FlightTrack } from "@skylens/core";
+import { SpatialIndex } from "@skylens-aviation/core";
+import type { FlightTrack } from "@skylens-aviation/core";
 
 export function useSpatialIndex(tracks: FlightTrack[]) {
   return useMemo(() => {

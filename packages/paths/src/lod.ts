@@ -1,4 +1,4 @@
-import { Position3D } from "@skylens/core";
+import { Position3D } from "@skylens-aviation/core";
 import { simplifyPath } from "./simplify";
 
 /** Level-of-detail configuration */

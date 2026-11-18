@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import type { FlightTrack } from "@skylens/core";
-import { haversineDistance } from "@skylens/core";
-import { detectFlightPhases } from "@skylens/ingest";
+import type { FlightTrack } from "@skylens-aviation/core";
+import { haversineDistance } from "@skylens-aviation/core";
+import { detectFlightPhases } from "@skylens-aviation/ingest";
 import { PHASE_COLORS } from "../../lib/colors";
 
 interface Props {

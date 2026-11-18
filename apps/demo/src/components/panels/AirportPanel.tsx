@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { SyntheticData } from "../../data/synthetic";
-import type { Airport } from "@skylens/core";
+import type { Airport } from "@skylens-aviation/core";
 import {
   extractSurfaceMovement,
   classifyMovement,
@@ -12,7 +12,7 @@ import {
   buildArrivalSequence,
   buildDepartureSequence,
   interArrivalTime,
-} from "@skylens/airport";
+} from "@skylens-aviation/airport";
 import { RunwayUtilChart } from "../charts/RunwayUtilChart";
 
 interface Props {

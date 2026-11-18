@@ -1,4 +1,4 @@
-import { FlightTrack, AirspaceBoundary } from "@skylens/core";
+import { FlightTrack, AirspaceBoundary } from "@skylens-aviation/core";
 import { pointInPolygon } from "./geometry";
 
 /** A detected sector crossing event */

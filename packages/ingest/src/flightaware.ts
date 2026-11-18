@@ -1,4 +1,4 @@
-import { StateVector } from "@skylens/core";
+import { StateVector } from "@skylens-aviation/core";
 
 export interface FlightAwareOptions {
   apiKey: string;

@@ -6,10 +6,10 @@ import {
   StateVectorBuffer,
   toMercator,
   fromMercator,
-} from "@skylens/core";
-import { findContainingSectors } from "@skylens/airspace";
-import { computeCongestion } from "@skylens/heatmap";
-import { sectorDensity } from "@skylens/heatmap";
+} from "@skylens-aviation/core";
+import { findContainingSectors } from "@skylens-aviation/airspace";
+import { computeCongestion } from "@skylens-aviation/heatmap";
+import { sectorDensity } from "@skylens-aviation/heatmap";
 import { PerformanceEnvelopeChart } from "../charts/PerformanceEnvelopeChart";
 import { CongestionChart } from "../charts/CongestionChart";
 

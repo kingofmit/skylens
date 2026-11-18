@@ -1,4 +1,4 @@
-import type { FlightTrack } from "@skylens/core";
+import type { FlightTrack } from "@skylens-aviation/core";
 import { PHASE_COLORS } from "../../lib/colors";
 
 /**

@@ -1,9 +1,9 @@
-import { parseMETAR } from "@skylens/weather";
-import type { METAR } from "@skylens/weather";
-import { metarToWindBarbs } from "@skylens/weather";
-import { parseSIGMET_GeoJSON } from "@skylens/weather";
-import { parsePIREP } from "@skylens/weather";
-import type { TurbulenceIntensity } from "@skylens/weather";
+import { parseMETAR } from "@skylens-aviation/weather";
+import type { METAR } from "@skylens-aviation/weather";
+import { metarToWindBarbs } from "@skylens-aviation/weather";
+import { parseSIGMET_GeoJSON } from "@skylens-aviation/weather";
+import { parsePIREP } from "@skylens-aviation/weather";
+import type { TurbulenceIntensity } from "@skylens-aviation/weather";
 
 const TURB_COLORS: Record<string, string> = {
   NEG: "#10b981",

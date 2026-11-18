@@ -1,4 +1,4 @@
-import { StateVector, FlightTrack } from "@skylens/core";
+import { StateVector, FlightTrack } from "@skylens-aviation/core";
 
 /** Parse CSV flight data (SBS BaseStation format) */
 export function parseSBS(csv: string): StateVector[] {

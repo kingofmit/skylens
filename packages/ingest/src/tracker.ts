@@ -1,4 +1,4 @@
-import { StateVector, FlightTrack, BoundingBox } from "@skylens/core";
+import { StateVector, FlightTrack, BoundingBox } from "@skylens-aviation/core";
 import { fetchStateVectors, OpenSkyOptions } from "./opensky";
 import { assembleFlightTracks } from "./parser";
 

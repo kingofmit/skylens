@@ -1,4 +1,4 @@
-import { AirspaceBoundary } from "@skylens/core";
+import { AirspaceBoundary } from "@skylens-aviation/core";
 
 /** Ray-casting point-in-polygon test */
 export function pointInPolygon(

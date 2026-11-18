@@ -1,4 +1,4 @@
-import { StateVector, BoundingBox } from "@skylens/core";
+import { StateVector, BoundingBox } from "@skylens-aviation/core";
 
 /** Congestion score for a region */
 export interface CongestionScore {

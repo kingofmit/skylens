@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildDensityGrid, normalizeHeatmap } from "../src/grid";
-import { StateVector } from "@skylens/core";
+import { StateVector } from "@skylens-aviation/core";
 
 const makeState = (lat: number, lon: number): StateVector => ({
   icao24: "test",

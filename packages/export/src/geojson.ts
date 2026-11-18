@@ -1,4 +1,4 @@
-import { FlightTrack } from "@skylens/core";
+import { FlightTrack } from "@skylens-aviation/core";
 
 export function flightTrackToGeoJSON(track: FlightTrack): object {
   return {

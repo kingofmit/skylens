@@ -1,6 +1,6 @@
-import type { FlightTrack } from "@skylens/core";
-import { bearing } from "@skylens/core";
-import type { RunwayDefinition } from "@skylens/airport";
+import type { FlightTrack } from "@skylens-aviation/core";
+import { bearing } from "@skylens-aviation/core";
+import type { RunwayDefinition } from "@skylens-aviation/airport";
 
 interface AirportInfo {
   center: { lat: number; lon: number };

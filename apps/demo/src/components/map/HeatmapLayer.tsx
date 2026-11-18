@@ -1,7 +1,7 @@
-import type { FlightTrack, BoundingBox, HeatmapCell, HexBinCell } from "@skylens/core";
-import { buildDensityGrid, normalizeHeatmap } from "@skylens/heatmap";
-import { kernelDensityEstimate } from "@skylens/heatmap";
-import { buildHexBinHeatmap, normalizeHexBins } from "@skylens/heatmap";
+import type { FlightTrack, BoundingBox, HeatmapCell, HexBinCell } from "@skylens-aviation/core";
+import { buildDensityGrid, normalizeHeatmap } from "@skylens-aviation/heatmap";
+import { kernelDensityEstimate } from "@skylens-aviation/heatmap";
+import { buildHexBinHeatmap, normalizeHexBins } from "@skylens-aviation/heatmap";
 
 export type HeatmapMode = "none" | "density" | "kde" | "hexbin";
 

@@ -1,5 +1,5 @@
-import { FlightTrack, TimeRange } from "@skylens/core";
-import { haversineDistance, bearing } from "@skylens/core";
+import { FlightTrack, TimeRange } from "@skylens-aviation/core";
+import { haversineDistance, bearing } from "@skylens-aviation/core";
 
 /** Runway physical definition */
 export interface RunwayDefinition {

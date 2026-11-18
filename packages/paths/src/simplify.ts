@@ -1,4 +1,4 @@
-import { Position3D } from "@skylens/core";
+import { Position3D } from "@skylens-aviation/core";
 
 /** Ramer-Douglas-Peucker line simplification */
 export function simplifyPath(points: Position3D[], epsilon: number): Position3D[] {

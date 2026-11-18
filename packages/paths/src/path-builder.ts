@@ -1,4 +1,4 @@
-import { StateVector, Position3D, geoToEnu, ftToM, catmullRomInterpolate } from "@skylens/core";
+import { StateVector, Position3D, geoToEnu, ftToM, catmullRomInterpolate } from "@skylens-aviation/core";
 
 export interface PathSegment {
   positions: Position3D[];

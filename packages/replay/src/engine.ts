@@ -1,4 +1,4 @@
-import { FlightTrack, StateVector, interpolateState, TimeRange } from "@skylens/core";
+import { FlightTrack, StateVector, interpolateState, TimeRange } from "@skylens-aviation/core";
 import { ReplayClock } from "./clock";
 
 export interface ReplayFrame {

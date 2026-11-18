@@ -1,4 +1,4 @@
-import { FlightTrack, PhaseSegment } from "@skylens/core";
+import { FlightTrack, PhaseSegment } from "@skylens-aviation/core";
 
 /** An event on the replay timeline */
 export interface TimelineEvent {

@@ -1,5 +1,5 @@
-import type { BoundingBox } from "@skylens/core";
-import { tilesInBBox, tileBounds } from "@skylens/core";
+import type { BoundingBox } from "@skylens-aviation/core";
+import { tilesInBBox, tileBounds } from "@skylens-aviation/core";
 
 /**
  * Build GeoJSON grid lines from slippy-map tile coordinates.

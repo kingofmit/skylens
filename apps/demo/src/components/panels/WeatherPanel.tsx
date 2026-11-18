@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { SyntheticData } from "../../data/synthetic";
-import { parseMETAR, parseTAF, parsePIREP, metarToWindBarbs, windBarbGeometry } from "@skylens/weather";
+import { parseMETAR, parseTAF, parsePIREP, metarToWindBarbs, windBarbGeometry } from "@skylens-aviation/weather";
 import { CATEGORY_COLORS } from "../../lib/colors";
 
 interface Props {

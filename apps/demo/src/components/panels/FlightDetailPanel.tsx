@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import type { FlightTrack, WaypointFix, AirspaceBoundary } from "@skylens/core";
-import { haversineDistance, bearing, SpatialIndex } from "@skylens/core";
-import { detectFlightPhases } from "@skylens/ingest";
-import { detectHoldingPatterns, annotateWaypoints } from "@skylens/paths";
+import type { FlightTrack, WaypointFix, AirspaceBoundary } from "@skylens-aviation/core";
+import { haversineDistance, bearing, SpatialIndex } from "@skylens-aviation/core";
+import { detectFlightPhases } from "@skylens-aviation/ingest";
+import { detectHoldingPatterns, annotateWaypoints } from "@skylens-aviation/paths";
 import { PHASE_COLORS } from "../../lib/colors";
 import { AltitudeProfileChart } from "../charts/AltitudeProfileChart";
 

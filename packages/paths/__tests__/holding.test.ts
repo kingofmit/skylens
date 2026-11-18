@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { detectHoldingPatterns } from "../src/holding";
-import { FlightTrack, StateVector } from "@skylens/core";
+import { FlightTrack, StateVector } from "@skylens-aviation/core";
 
 function makeCircularTrack(orbits: number): FlightTrack {
   const states: StateVector[] = [];

@@ -1,5 +1,5 @@
-import { FlightTrack, Airport } from "@skylens/core";
-import { haversineDistance } from "@skylens/core";
+import { FlightTrack, Airport } from "@skylens-aviation/core";
+import { haversineDistance } from "@skylens-aviation/core";
 
 /** Classification for a segment of surface movement */
 export type SurfaceClassification = "taxi" | "runway" | "gate";

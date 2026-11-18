@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { FlightDNAMetrics } from "@skylens/core";
-import { buildPerformanceEnvelopeProfile } from "@skylens/core";
+import type { FlightDNAMetrics } from "@skylens-aviation/core";
+import { buildPerformanceEnvelopeProfile } from "@skylens-aviation/core";
 import {
   ResponsiveContainer,
   LineChart,

@@ -1,4 +1,4 @@
-import { FlightTrack, FlightPhase, PhaseSegment } from "@skylens/core";
+import { FlightTrack, FlightPhase, PhaseSegment } from "@skylens-aviation/core";
 
 const MIN_STATES_FOR_TRANSITION = 3;
 

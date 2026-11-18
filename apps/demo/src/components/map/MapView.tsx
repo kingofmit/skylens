@@ -1,7 +1,7 @@
 import { useRef, useEffect, useMemo, useState } from "react";
 import maplibregl from "maplibre-gl";
-import type { FlightTrack, BoundingBox } from "@skylens/core";
-import { haversineDistance, bearing, greatCircleArc } from "@skylens/core";
+import type { FlightTrack, BoundingBox } from "@skylens-aviation/core";
+import { haversineDistance, bearing, greatCircleArc } from "@skylens-aviation/core";
 import { useMap } from "../../hooks/useMap";
 import type { SyntheticData } from "../../data/synthetic";
 import type { UseReplayReturn } from "../../hooks/useReplay";

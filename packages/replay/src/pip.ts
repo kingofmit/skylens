@@ -1,4 +1,4 @@
-import { StateVector, CameraState } from "@skylens/core";
+import { StateVector, CameraState } from "@skylens-aviation/core";
 import { ReplayEngine, ReplayFrame } from "./engine";
 
 /** Focused view on a single aircraft during fleet replay */

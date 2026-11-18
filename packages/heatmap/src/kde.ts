@@ -1,4 +1,4 @@
-import { StateVector, BoundingBox, HeatmapCell } from "@skylens/core";
+import { StateVector, BoundingBox, HeatmapCell } from "@skylens-aviation/core";
 
 /** Gaussian kernel density estimation for smooth heatmaps */
 export function kernelDensityEstimate(

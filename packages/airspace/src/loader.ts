@@ -1,4 +1,4 @@
-import { AirspaceBoundary } from "@skylens/core";
+import { AirspaceBoundary } from "@skylens-aviation/core";
 
 /** Load airspace boundaries from a GeoJSON FeatureCollection */
 export function loadAirspaceGeoJSON(geojson: {

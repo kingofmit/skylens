@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/replay",
+  "name": "@skylens-aviation/replay",
   "version": "0.1.0",
   "description": "Flight replay engine with timeline control, speed adjustment, and multi-track synchronization.",
   "author": "Ahmed Allem",
@@ -31,7 +31,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylens/core": "workspace:*"
+    "@skylens-aviation/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

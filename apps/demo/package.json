@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/demo",
+  "name": "@skylens-aviation/demo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,15 +17,15 @@
     "@deck.gl/mapbox": "^9.0.0",
     "@deck.gl/geo-layers": "^9.0.0",
     "recharts": "^2.0.0",
-    "@skylens/core": "workspace:*",
-    "@skylens/ingest": "workspace:*",
-    "@skylens/paths": "workspace:*",
-    "@skylens/heatmap": "workspace:*",
-    "@skylens/replay": "workspace:*",
-    "@skylens/export": "workspace:*",
-    "@skylens/airport": "workspace:*",
-    "@skylens/airspace": "workspace:*",
-    "@skylens/weather": "workspace:*"
+    "@skylens-aviation/core": "workspace:*",
+    "@skylens-aviation/ingest": "workspace:*",
+    "@skylens-aviation/paths": "workspace:*",
+    "@skylens-aviation/heatmap": "workspace:*",
+    "@skylens-aviation/replay": "workspace:*",
+    "@skylens-aviation/export": "workspace:*",
+    "@skylens-aviation/airport": "workspace:*",
+    "@skylens-aviation/airspace": "workspace:*",
+    "@skylens-aviation/weather": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

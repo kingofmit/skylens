@@ -1,4 +1,4 @@
-import { StateVector, BoundingBox, HeatmapCell } from "@skylens/core";
+import { StateVector, BoundingBox, HeatmapCell } from "@skylens-aviation/core";
 import { GridOptions, buildDensityGrid } from "./grid";
 
 /** A single altitude layer with its heatmap cells */

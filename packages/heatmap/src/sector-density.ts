@@ -1,4 +1,4 @@
-import { StateVector, AirspaceBoundary } from "@skylens/core";
+import { StateVector, AirspaceBoundary } from "@skylens-aviation/core";
 
 /** Compute aircraft density per airspace sector using point-in-polygon */
 export function sectorDensity(
@@ -26,7 +26,7 @@ export function sectorDensity(
   return counts;
 }
 
-/** Inlined point-in-polygon to avoid circular dependency with @skylens/airspace */
+/** Inlined point-in-polygon to avoid circular dependency with @skylens-aviation/airspace */
 function pointInPolygonInline(
   lat: number,
   lon: number,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { FlightTrack, StateVector, CameraState } from "@skylens/core";
+import type { FlightTrack, StateVector, CameraState } from "@skylens-aviation/core";
 import type { UseReplayReturn } from "../../hooks/useReplay";
 
 interface Props {

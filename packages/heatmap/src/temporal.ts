@@ -1,4 +1,4 @@
-import { StateVector, BoundingBox, HeatmapCell } from "@skylens/core";
+import { StateVector, BoundingBox, HeatmapCell } from "@skylens-aviation/core";
 import { buildDensityGrid, GridOptions } from "./grid";
 
 export interface TimeSlice {

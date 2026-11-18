@@ -1,5 +1,5 @@
-import { FlightTrack, WaypointFix } from "@skylens/core";
-import { haversineDistance } from "@skylens/core";
+import { FlightTrack, WaypointFix } from "@skylens-aviation/core";
+import { haversineDistance } from "@skylens-aviation/core";
 
 /** A waypoint annotation matched to a flight track point */
 export interface WaypointAnnotation {

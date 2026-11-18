@@ -5,9 +5,9 @@ import type {
   WaypointFix,
   FlightDNAMetrics,
   BoundingBox,
-} from "@skylens/core";
-import { greatCircleInterpolate, bearing } from "@skylens/core";
-import type { RunwayDefinition } from "@skylens/airport";
+} from "@skylens-aviation/core";
+import { greatCircleInterpolate, bearing } from "@skylens-aviation/core";
+import type { RunwayDefinition } from "@skylens-aviation/airport";
 
 /* ================================================================== *
  *  Public interface                                                    *

@@ -1,4 +1,4 @@
-import { Color, Position3D } from "@skylens/core";
+import { Color, Position3D } from "@skylens-aviation/core";
 
 export type ColorMode = "altitude" | "speed" | "vrate" | "solid";
 

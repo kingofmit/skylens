@@ -1,5 +1,5 @@
 {
-  "name": "@skylens/heatmap",
+  "name": "@skylens-aviation/heatmap",
   "version": "0.1.0",
   "description": "Airspace density heatmaps, grid aggregation, and kernel density estimation.",
   "author": "Ahmed Allem",
@@ -31,7 +31,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylens/core": "workspace:*"
+    "@skylens-aviation/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.0"
