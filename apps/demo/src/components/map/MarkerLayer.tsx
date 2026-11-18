@@ -12,6 +12,21 @@ import { sectorCrossingsToGeoJSON } from "@skylens/airspace";
  * - Sector crossing entry/exit points
  * - FlightDNA anomaly markers
  */
+function makeCirclePolygon(lat: number, lon: number, radiusKm: number, points = 64): GeoJSON.Feature {
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= points; i++) {
+    const angle = (i / points) * 2 * Math.PI;
+    const dLat = (radiusKm / 111.32) * Math.cos(angle);
+    const dLon = (radiusKm / (111.32 * Math.cos(lat * Math.PI / 180))) * Math.sin(angle);
+    coords.push([lon + dLon, lat + dLat]);
+  }
+  return {
+    type: "Feature",
+    properties: { type: "holding_orbit" },
+    geometry: { type: "Polygon", coordinates: [coords] },
+  };
+}
+
 export function getMarkerGeoJSON(
   tracks: FlightTrack[],
   waypointFixes: WaypointFix[],
@@ -19,12 +34,14 @@ export function getMarkerGeoJSON(
   flightDNAMetrics: FlightDNAMetrics[],
 ): {
   holdingPatterns: GeoJSON.FeatureCollection;
+  holdingOrbits: GeoJSON.FeatureCollection;
   waypoints: GeoJSON.FeatureCollection;
   crossings: GeoJSON.FeatureCollection;
   anomalyMarkers: GeoJSON.FeatureCollection;
   healthPath: GeoJSON.FeatureCollection;
 } {
   const holdingFeatures: GeoJSON.Feature[] = [];
+  const holdingOrbitFeatures: GeoJSON.Feature[] = [];
   const waypointFeatures: GeoJSON.Feature[] = [];
   const crossingFeatures: GeoJSON.Feature[] = [];
 
@@ -47,6 +64,9 @@ export function getMarkerGeoJSON(
           coordinates: [hold.centerLon, hold.centerLat],
         },
       });
+
+      // Generate orbit circle polygon around holding center
+      holdingOrbitFeatures.push(makeCirclePolygon(hold.centerLat, hold.centerLon, 5));
     }
 
     // Waypoint annotations
@@ -144,6 +164,7 @@ export function getMarkerGeoJSON(
 
   return {
     holdingPatterns: { type: "FeatureCollection", features: holdingFeatures },
+    holdingOrbits: { type: "FeatureCollection", features: holdingOrbitFeatures },
     waypoints: { type: "FeatureCollection", features: waypointFeatures },
     crossings: { type: "FeatureCollection", features: crossingFeatures },
     anomalyMarkers: { type: "FeatureCollection", features: anomalyFeatures },

@@ -63,9 +63,9 @@ export function FlightListPanel({ tracks, selectedFlight, onSelectFlight }: Prop
           <button
             key={s.icao24}
             onClick={() => onSelectFlight(s.icao24)}
-            className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+            className={`w-full text-left px-3 py-2 rounded-lg tab-transition ${
               isSelected
-                ? "bg-cyan-500/20 border border-cyan-500/30"
+                ? "bg-cyan-500/20 border border-cyan-500/30 border-glow-animate"
                 : "bg-white/5 hover:bg-white/10 border border-transparent"
             }`}
           >

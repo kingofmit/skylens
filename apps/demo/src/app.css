@@ -61,3 +61,54 @@ html, body, #root {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 229, 255, 0.4);
 }
+
+/* Subtle pulse animation for selected elements */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(0, 229, 255, 0.15); }
+  50% { box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Tab transition */
+.tab-transition {
+  transition: all 0.2s ease;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Gradient border animation for selected cards */
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(0, 229, 255, 0.2); }
+  50% { border-color: rgba(0, 229, 255, 0.5); }
+}
+
+.border-glow-animate {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* Subtle scanline overlay for HUD feel */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 229, 255, 0.015) 2px,
+    rgba(0, 229, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}

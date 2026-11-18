@@ -74,7 +74,7 @@ export function ReplayControls({ replay }: Props) {
           onClick={handlePlayPause}
           className={`p-1.5 rounded transition-colors ${
             state === "playing"
-              ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-400"
+              ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 pulse-glow"
               : "hover:bg-white/10 text-gray-400 hover:text-cyan-400"
           }`}
           title={state === "playing" ? "Pause (Space)" : "Play (Space)"}
@@ -134,7 +134,7 @@ export function ReplayControls({ replay }: Props) {
         />
         <div
           className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-orange-400 rounded-full shadow-md shadow-orange-400/30 opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{ left: `calc(${(progress * 100).toFixed(1)}% - 6px)` }}
+          style={{ left: `calc(${(progress * 100).toFixed(1)}% - 6px)`, boxShadow: '0 0 8px rgba(255, 145, 0, 0.5)' }}
         />
       </div>
 

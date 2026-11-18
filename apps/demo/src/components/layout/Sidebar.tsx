@@ -21,7 +21,8 @@ export function Sidebar({ tab, data, selectedFlight, onSelectFlight, replay }: S
 
   return (
     <aside className="w-72 glass glow-cyan border-r border-cyan-500/20 overflow-y-auto shrink-0 flex flex-col">
-      <div className="p-3 space-y-3">
+      <div className="h-px bg-gradient-to-b from-cyan-500/5 to-transparent" />
+      <div className="p-3 space-y-3 animate-fade-in" key={tab}>
         {tab === "flights" && (
           <>
             <FlightListPanel

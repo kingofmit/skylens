@@ -35,10 +35,13 @@ const LAYER_IDS = {
   aircraft: "aircraft-points",
   aircraftGlow: "aircraft-glow",
   holding: "holding-markers",
+  holdingOrbit: "holding-orbit-outline",
+  holdingOrbitFill: "holding-orbit-fill",
   waypoints: "waypoint-markers",
   waypointLabels: "waypoint-labels",
   crossings: "crossing-markers",
   airspace: "airspace-fill",
+  airspaceGlow: "airspace-glow",
   airspaceOutline: "airspace-outline",
   heatmap: "heatmap-layer",
   tileDebug: "tile-debug",
@@ -60,6 +63,7 @@ const LAYER_IDS = {
   healthPath: "health-path",
   healthPathGlow: "health-path-glow",
   anomalyMarkers: "anomaly-markers",
+  anomalyGlow: "anomaly-glow",
 } as const;
 
 /* ── Neon flight colors by callsign ──────────────────────────────── */
@@ -87,8 +91,12 @@ function safeSetData(map: maplibregl.Map, sourceId: string, data: GeoJSON.Featur
 }
 
 function removeLayers(map: maplibregl.Map) {
-  for (const id of ALL_LAYER_IDS) {
+  // Also remove auxiliary layers that share a source with a managed layer
+  const extraLayers = [LAYER_IDS.waypoints + "-inner"];
+  for (const id of [...ALL_LAYER_IDS, ...extraLayers]) {
     if (map.getLayer(id)) map.removeLayer(id);
+  }
+  for (const id of ALL_LAYER_IDS) {
     const srcId = getSourceId(id);
     if (map.getSource(srcId)) map.removeSource(srcId);
   }
@@ -107,6 +115,51 @@ function addSourceAndLayer(
   if (!map.getLayer(layerId)) {
     map.addLayer({ ...layerDef, id: layerId, source: srcId } as maplibregl.LayerSpecification);
   }
+}
+
+/* ── Airplane icon ────────────────────────────────────────────────── */
+
+function createAirplaneIcon(map: maplibregl.Map) {
+  if (map.hasImage("airplane-icon")) return;
+  const size = 32;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  // Draw airplane silhouette pointing UP (0deg)
+  ctx.fillStyle = "#00e5ff";
+  ctx.shadowColor = "#00e5ff";
+  ctx.shadowBlur = 6;
+  ctx.beginPath();
+  // Fuselage
+  ctx.moveTo(16, 2);   // nose
+  ctx.lineTo(18, 10);
+  ctx.lineTo(18, 14);
+  // Right wing
+  ctx.lineTo(28, 18);
+  ctx.lineTo(28, 20);
+  ctx.lineTo(18, 18);
+  // Body continue
+  ctx.lineTo(18, 24);
+  // Right tail
+  ctx.lineTo(22, 28);
+  ctx.lineTo(22, 29);
+  ctx.lineTo(18, 27);
+  ctx.lineTo(16, 30); // tail point
+  ctx.lineTo(14, 27);
+  ctx.lineTo(10, 29);
+  ctx.lineTo(10, 28);
+  ctx.lineTo(14, 24);
+  ctx.lineTo(14, 18);
+  ctx.lineTo(4, 20);
+  ctx.lineTo(4, 18);
+  ctx.lineTo(14, 14);
+  ctx.lineTo(14, 10);
+  ctx.closePath();
+  ctx.fill();
+
+  map.addImage("airplane-icon", { width: size, height: size, data: ctx.getImageData(0, 0, size, size).data });
 }
 
 /* ── Component ─────────────────────────────────────────────────────── */
@@ -197,6 +250,9 @@ export function MapView({
       prevTabRef.current = tab;
     }
 
+    // Ensure airplane icon is registered
+    createAirplaneIcon(map);
+
     switch (tab) {
       case "flights":
         setupFlightsLayers(map, data, selectedFlight, heatmapMode, showAirspace, showTileDebug, arcGeoJSON);
@@ -227,9 +283,14 @@ export function MapView({
         </div>
       )}
 
-      {/* Tab indicator badge */}
-      <div className="absolute bottom-2 left-2 bg-gray-900/70 text-xs text-gray-400 px-2 py-1 rounded pointer-events-none z-10">
-        {tab.charAt(0).toUpperCase() + tab.slice(1)} View
+      {/* Status bar */}
+      <div className="absolute bottom-8 left-2 glass rounded px-2 py-1 text-[10px] font-mono flex items-center gap-3 z-10">
+        <span className="text-green-400 flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+          LIVE
+        </span>
+        <span className="text-gray-500">|</span>
+        <span className="text-gray-400">{tab} view</span>
       </div>
     </div>
   );
@@ -294,24 +355,26 @@ function setupFlightsLayers(
     safeSetData(map, getSourceId(LAYER_IDS.aircraftGlow), aircraftGJ);
     safeSetData(map, getSourceId(LAYER_IDS.aircraft), aircraftGJ);
   } else {
-    // Outer glow circle
+    // Outer glow circle (larger, more subtle)
     addSourceAndLayer(map, LAYER_IDS.aircraftGlow, aircraftGJ, {
       type: "circle",
       paint: {
-        "circle-radius": ["case", ["==", ["get", "selected"], true], 16, 12],
+        "circle-radius": ["case", ["==", ["get", "selected"], true], 20, 14],
         "circle-color": "#00e5ff",
-        "circle-opacity": 0.25,
+        "circle-opacity": 0.18,
         "circle-blur": 1,
       },
     });
-    // Inner bright marker
+    // Airplane SVG symbol layer
     addSourceAndLayer(map, LAYER_IDS.aircraft, aircraftGJ, {
-      type: "circle",
-      paint: {
-        "circle-radius": ["case", ["==", ["get", "selected"], true], 6, 4],
-        "circle-color": "#00e5ff",
-        "circle-stroke-width": 1.5,
-        "circle-stroke-color": "#ffffff",
+      type: "symbol",
+      layout: {
+        "icon-image": "airplane-icon",
+        "icon-size": ["case", ["==", ["get", "selected"], true], 1.2, 0.8],
+        "icon-rotate": ["get", "heading"],
+        "icon-rotation-alignment": "map",
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
       },
     });
   }
@@ -351,7 +414,30 @@ function setupFlightsLayers(
     data.flightDNAMetrics,
   );
 
-  // Holding pattern markers
+  // Holding orbit circle polygons (fill + dashed outline)
+  if (map.getSource(getSourceId(LAYER_IDS.holdingOrbitFill))) {
+    safeSetData(map, getSourceId(LAYER_IDS.holdingOrbitFill), markers.holdingOrbits);
+    safeSetData(map, getSourceId(LAYER_IDS.holdingOrbit), markers.holdingOrbits);
+  } else {
+    addSourceAndLayer(map, LAYER_IDS.holdingOrbitFill, markers.holdingOrbits, {
+      type: "fill",
+      paint: {
+        "fill-color": "#00e5ff",
+        "fill-opacity": 0.05,
+      },
+    });
+    addSourceAndLayer(map, LAYER_IDS.holdingOrbit, markers.holdingOrbits, {
+      type: "line",
+      paint: {
+        "line-color": "#00e5ff",
+        "line-width": 1.5,
+        "line-dasharray": [4, 4],
+        "line-opacity": 0.6,
+      },
+    });
+  }
+
+  // Holding pattern center markers
   if (map.getSource(getSourceId(LAYER_IDS.holding))) {
     safeSetData(map, getSourceId(LAYER_IDS.holding), markers.holdingPatterns);
   } else {
@@ -367,22 +453,40 @@ function setupFlightsLayers(
     });
   }
 
-  // Waypoint markers
+  // Waypoint markers — outer glow ring + bright inner dot
   if (map.getSource(getSourceId(LAYER_IDS.waypoints))) {
     safeSetData(map, getSourceId(LAYER_IDS.waypoints), markers.waypoints);
   } else {
     addSourceAndLayer(map, LAYER_IDS.waypoints, markers.waypoints, {
       type: "circle",
       paint: {
-        "circle-radius": 5,
+        "circle-radius": 8,
         "circle-color": "#10b981",
+        "circle-opacity": 0.15,
+        "circle-blur": 0.8,
         "circle-stroke-width": 1,
-        "circle-stroke-color": "#ffffff",
+        "circle-stroke-color": "#10b981",
+        "circle-stroke-opacity": 0.4,
       },
     });
+    // Inner bright dot on same source (separate layer, shared source)
+    const wpInnerLayerId = LAYER_IDS.waypoints + "-inner";
+    if (!map.getLayer(wpInnerLayerId)) {
+      map.addLayer({
+        id: wpInnerLayerId,
+        type: "circle",
+        source: getSourceId(LAYER_IDS.waypoints),
+        paint: {
+          "circle-radius": 3,
+          "circle-color": "#10b981",
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#ffffff",
+        },
+      });
+    }
   }
 
-  // Waypoint labels
+  // Waypoint labels with text halo
   if (map.getSource(getSourceId(LAYER_IDS.waypointLabels))) {
     safeSetData(map, getSourceId(LAYER_IDS.waypointLabels), markers.waypoints);
   } else {
@@ -391,12 +495,13 @@ function setupFlightsLayers(
       layout: {
         "text-field": ["get", "name"],
         "text-size": 10,
-        "text-offset": [0, 1.2],
+        "text-offset": [0, 1.5],
         "text-anchor": "top",
+        "text-allow-overlap": false,
       },
       paint: {
-        "text-color": "#a7f3d0",
-        "text-halo-color": "#000000",
+        "text-color": "#00e5ff",
+        "text-halo-color": "rgba(0,0,0,0.8)",
         "text-halo-width": 1,
       },
     });
@@ -429,15 +534,27 @@ function setupFlightsLayers(
 
   if (map.getSource(getSourceId(LAYER_IDS.airspace))) {
     safeSetData(map, getSourceId(LAYER_IDS.airspace), airspaceGJ);
+    safeSetData(map, getSourceId(LAYER_IDS.airspaceGlow), airspaceGJ);
     safeSetData(map, getSourceId(LAYER_IDS.airspaceOutline), airspaceGJ);
   } else {
     addSourceAndLayer(map, LAYER_IDS.airspace, airspaceGJ, {
       type: "fill",
       paint: {
-        "fill-color": "#8b5cf6",
-        "fill-opacity": 0.1,
+        "fill-color": "#00e5ff",
+        "fill-opacity": 0.03,
       },
     });
+    // Glow layer (wider blurred line underneath)
+    addSourceAndLayer(map, LAYER_IDS.airspaceGlow, airspaceGJ, {
+      type: "line",
+      paint: {
+        "line-color": "#00e5ff",
+        "line-width": 4,
+        "line-blur": 3,
+        "line-opacity": 0.3,
+      },
+    });
+    // Sharp outline on top
     addSourceAndLayer(map, LAYER_IDS.airspaceOutline, airspaceGJ, {
       type: "line",
       paint: {
@@ -691,10 +808,22 @@ function setupAnalyticsLayers(map: maplibregl.Map, data: SyntheticData) {
     });
   }
 
-  // Anomaly markers
-  if (map.getSource(getSourceId(LAYER_IDS.anomalyMarkers))) {
+  // Anomaly markers — glow ring + inner marker
+  if (map.getSource(getSourceId(LAYER_IDS.anomalyGlow))) {
+    safeSetData(map, getSourceId(LAYER_IDS.anomalyGlow), markers.anomalyMarkers);
     safeSetData(map, getSourceId(LAYER_IDS.anomalyMarkers), markers.anomalyMarkers);
   } else {
+    // Outer pulse glow
+    addSourceAndLayer(map, LAYER_IDS.anomalyGlow, markers.anomalyMarkers, {
+      type: "circle",
+      paint: {
+        "circle-radius": 16,
+        "circle-color": "#ff5252",
+        "circle-opacity": 0.2,
+        "circle-blur": 1,
+      },
+    });
+    // Inner bright marker
     addSourceAndLayer(map, LAYER_IDS.anomalyMarkers, markers.anomalyMarkers, {
       type: "circle",
       paint: {

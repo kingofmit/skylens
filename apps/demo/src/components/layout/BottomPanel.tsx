@@ -16,7 +16,9 @@ export function BottomPanel({ data, selectedFlight, replay }: BottomPanelProps) 
     data.tracks.find((t) => t.icao24 === selectedFlight) ?? data.tracks[0] ?? null;
 
   return (
-    <div className="h-56 glass-strong border-t border-cyan-500/20 flex shrink-0">
+    <div className="h-56 glass-strong border-t border-cyan-500/20 flex shrink-0 flex-col">
+      <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+      <div className="flex flex-1 min-h-0">
       {/* Left: Replay controls + timeline + PiP */}
       <div className="w-96 p-3 border-r border-cyan-500/10 flex flex-col gap-2 overflow-y-auto">
         <ReplayControls replay={replay} />
@@ -40,6 +42,7 @@ export function BottomPanel({ data, selectedFlight, replay }: BottomPanelProps) 
             No flight data
           </div>
         )}
+      </div>
       </div>
     </div>
   );

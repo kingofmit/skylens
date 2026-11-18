@@ -90,9 +90,22 @@ export function Toolbar({
   return (
     <header className="glass-strong flex items-center gap-2 px-4 py-2 border-b border-cyan-500/20 shrink-0">
       {/* Logo */}
-      <span className="text-neon-cyan font-bold text-xl tracking-wider mr-4 select-none">
-        SkyLens
-      </span>
+      <div className="flex items-center gap-3 mr-4 select-none">
+        <svg width="32" height="32" viewBox="0 0 32 32" className="text-cyan-400">
+          {/* Orbital ring */}
+          <ellipse cx="16" cy="16" rx="14" ry="14" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4" />
+          <ellipse cx="16" cy="16" rx="14" ry="8" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.6" transform="rotate(-20 16 16)" />
+          {/* Airplane silhouette */}
+          <g transform="translate(16,16) rotate(-45) translate(-8,-8)" fill="currentColor">
+            <path d="M8 1 L10 5 L10 7 L15 10 L15 11 L10 9.5 L10 13 L12 15 L12 15.5 L10 14.5 L8 16 L6 14.5 L4 15.5 L4 15 L6 13 L6 9.5 L1 11 L1 10 L6 7 L6 5 Z" />
+          </g>
+          {/* Glow dot */}
+          <circle cx="16" cy="2" r="1.5" fill="#00e5ff" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite" />
+          </circle>
+        </svg>
+        <span className="text-neon-cyan font-bold text-xl tracking-wider">SkyLens</span>
+      </div>
 
       {/* Tab buttons */}
       <nav className="flex gap-1">
@@ -100,9 +113,9 @@ export function Toolbar({
           <button
             key={t.key}
             onClick={() => onTabChange(t.key)}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+            className={`px-3 py-1 rounded text-sm font-medium tab-transition ${
               tab === t.key
-                ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 pulse-glow"
                 : "text-gray-400 hover:text-cyan-300 hover:bg-white/5"
             }`}
           >
