@@ -50,7 +50,7 @@ export async function fetchFlightTrack(
     groundSpeedKts: 0,
     trackDeg: p[4] ?? 0,
     verticalRateFpm: 0,
-    onGround: p[5] === true,
+    onGround: Boolean(p[5]),
   }));
 }
 

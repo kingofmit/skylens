@@ -1,3 +1,10 @@
 export * from "./types";
 export * from "./coordinates";
 export * from "./interpolation";
+export * from "./tiles";
+export { SpatialIndex } from "./spatial-index";
+export * from "./flightdna";
+export { WorkerPool } from "./worker-pool";
+export type { WorkerTask, WorkerResult } from "./worker-pool";
+export { StateVectorBuffer, StreamingProcessor } from "./typed-arrays";
+export * from "./spatial-index-worker";

@@ -83,3 +83,98 @@ export function mToFt(m: number): number {
 export function ktsToMs(kts: number): number {
   return kts * 0.514444;
 }
+
+/* ── Great-circle interpolation ───────────────────────────────────── */
+
+/** Interpolate along a great-circle arc between two points */
+export function greatCircleInterpolate(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+  fraction: number,
+): { lat: number; lon: number } {
+  const φ1 = lat1 * DEG_TO_RAD;
+  const λ1 = lon1 * DEG_TO_RAD;
+  const φ2 = lat2 * DEG_TO_RAD;
+  const λ2 = lon2 * DEG_TO_RAD;
+
+  const d = 2 * Math.asin(
+    Math.sqrt(
+      Math.sin((φ2 - φ1) / 2) ** 2 +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin((λ2 - λ1) / 2) ** 2,
+    ),
+  );
+
+  if (d < 1e-12) return { lat: lat1, lon: lon1 };
+
+  const a = Math.sin((1 - fraction) * d) / Math.sin(d);
+  const b = Math.sin(fraction * d) / Math.sin(d);
+
+  const x = a * Math.cos(φ1) * Math.cos(λ1) + b * Math.cos(φ2) * Math.cos(λ2);
+  const y = a * Math.cos(φ1) * Math.sin(λ1) + b * Math.cos(φ2) * Math.sin(λ2);
+  const z = a * Math.sin(φ1) + b * Math.sin(φ2);
+
+  return {
+    lat: Math.atan2(z, Math.sqrt(x * x + y * y)) / DEG_TO_RAD,
+    lon: Math.atan2(y, x) / DEG_TO_RAD,
+  };
+}
+
+/** Generate an array of points along a great-circle arc */
+export function greatCircleArc(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+  numPoints: number,
+): { lat: number; lon: number }[] {
+  const points: { lat: number; lon: number }[] = [];
+  for (let i = 0; i < numPoints; i++) {
+    points.push(greatCircleInterpolate(lat1, lon1, lat2, lon2, i / (numPoints - 1)));
+  }
+  return points;
+}
+
+/* ── Mercator / Web Mercator projections ──────────────────────────── */
+
+/** Project lat/lon to Mercator (EPSG:3857) coordinates in meters */
+export function toMercator(
+  lat: number,
+  lon: number,
+): { x: number; y: number } {
+  const x = lon * DEG_TO_RAD * EARTH_RADIUS_M;
+  const y =
+    Math.log(Math.tan(Math.PI / 4 + (lat * DEG_TO_RAD) / 2)) * EARTH_RADIUS_M;
+  return { x, y };
+}
+
+/** Inverse Mercator — meters back to lat/lon */
+export function fromMercator(
+  x: number,
+  y: number,
+): { lat: number; lon: number } {
+  const lon = (x / EARTH_RADIUS_M) / DEG_TO_RAD;
+  const lat =
+    (2 * Math.atan(Math.exp(y / EARTH_RADIUS_M)) - Math.PI / 2) / DEG_TO_RAD;
+  return { lat, lon };
+}
+
+const WEB_MERCATOR_MAX_LAT = 85.051129;
+
+/** Project lat/lon to Web Mercator (clamps latitude to ±85.051°) */
+export function toWebMercator(
+  lat: number,
+  lon: number,
+): { x: number; y: number } {
+  const clampedLat = Math.max(-WEB_MERCATOR_MAX_LAT, Math.min(WEB_MERCATOR_MAX_LAT, lat));
+  return toMercator(clampedLat, lon);
+}
+
+/** Inverse Web Mercator — meters back to lat/lon */
+export function fromWebMercator(
+  x: number,
+  y: number,
+): { lat: number; lon: number } {
+  return fromMercator(x, y);
+}

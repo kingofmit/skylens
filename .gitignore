@@ -4,3 +4,23 @@ dist
 *.tsbuildinfo
 .DS_Store
 coverage
+.codeagento
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+
+# Test cache
+.vitest

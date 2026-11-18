@@ -74,3 +74,62 @@ export interface Airport {
   longitude: number;
   elevationFt: number;
 }
+
+/** Map tile coordinate (slippy map) */
+export interface TileCoord {
+  x: number;
+  y: number;
+  z: number;
+}
+
+/** Flight phase classification */
+export type FlightPhase =
+  | "ground"
+  | "takeoff"
+  | "climb"
+  | "cruise"
+  | "descent"
+  | "approach"
+  | "landing";
+
+/** A segment of a flight in a single phase */
+export interface PhaseSegment {
+  phase: FlightPhase;
+  startIndex: number;
+  endIndex: number;
+  startTime: number;
+  endTime: number;
+}
+
+/** Event marker on a replay timeline */
+export interface EventMarker {
+  time: number;
+  type: string;
+  label: string;
+  data?: Record<string, unknown>;
+}
+
+/** Airspace sector boundary */
+export interface AirspaceBoundary {
+  id: string;
+  name: string;
+  type: string;
+  polygon: { lat: number; lon: number }[];
+  altRange?: { minFl: number; maxFl: number };
+}
+
+/** Navigation waypoint or fix */
+export interface WaypointFix {
+  name: string;
+  lat: number;
+  lon: number;
+  type: "waypoint" | "vor" | "ndb" | "fix";
+}
+
+/** Hexagonal bin cell for hex-grid heatmaps */
+export interface HexBinCell {
+  centerLat: number;
+  centerLon: number;
+  radius: number;
+  value: number;
+}
