@@ -4,8 +4,25 @@
   "description": "Shared types, coordinate transforms, and data structures for SkyLens.",
   "author": "Ahmed Allem",
   "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kingofmit/skylens.git",
+    "directory": "packages/core"
+  },
+  "keywords": ["skylens", "flight", "ads-b", "aviation", "core", "types", "coordinates"],
+  "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": ["dist"],
   "scripts": {
     "build": "tsc",

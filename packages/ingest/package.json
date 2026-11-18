@@ -4,8 +4,25 @@
   "description": "ADS-B data ingestion, OpenSky API client, and flight track assembly.",
   "author": "Ahmed Allem",
   "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kingofmit/skylens.git",
+    "directory": "packages/ingest"
+  },
+  "keywords": ["skylens", "flight", "ads-b", "aviation", "ingest", "opensky", "data-ingestion"],
+  "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": ["dist"],
   "scripts": {
     "build": "tsc",
