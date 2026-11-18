@@ -27,7 +27,7 @@ function WindBarbSVG({ dirDeg, speedKts }: { dirDeg: number; speedKts: number })
           y1={geom.shaft[0][1]}
           x2={geom.shaft[1][0]}
           y2={geom.shaft[1][1]}
-          stroke="#d1d5db"
+          stroke="#00e5ff"
           strokeWidth={2}
         />
       )}
@@ -40,7 +40,7 @@ function WindBarbSVG({ dirDeg, speedKts }: { dirDeg: number; speedKts: number })
             y1={flag[0][1]}
             x2={flag[1][0]}
             y2={flag[1][1]}
-            stroke="#d1d5db"
+            stroke="#00e5ff"
             strokeWidth={2}
           />
         ) : null,
@@ -51,7 +51,7 @@ function WindBarbSVG({ dirDeg, speedKts }: { dirDeg: number; speedKts: number })
           <polygon
             key={`p${i}`}
             points={pen.map((p) => `${p[0]},${p[1]}`).join(" ")}
-            fill="#d1d5db"
+            fill="#00e5ff"
           />
         ) : null,
       )}
@@ -77,7 +77,7 @@ export function WeatherPanel({ data }: Props) {
 
   return (
     <div className="space-y-5 text-sm">
-      <h3 className="text-lg font-semibold">Weather</h3>
+      <h3 className="text-lg font-semibold text-neon-cyan">Weather</h3>
 
       {/* Flight Category Legend */}
       <div className="flex gap-3 text-xs">
@@ -94,10 +94,10 @@ export function WeatherPanel({ data }: Props) {
 
       {/* METAR Table */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">METARs</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">METARs</h4>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-gray-400 border-b border-gray-700">
+            <tr className="text-gray-400 border-b border-cyan-500/10">
               <th className="text-left py-1">Stn</th>
               <th className="text-left py-1">Wind</th>
               <th className="py-1">Barb</th>
@@ -109,7 +109,7 @@ export function WeatherPanel({ data }: Props) {
           </thead>
           <tbody>
             {metars.map((m, i) => (
-              <tr key={i} className="border-b border-gray-800">
+              <tr key={i} className="border-b border-cyan-500/10 hover:bg-white/5">
                 <td className="py-1 font-mono">{m.station}</td>
                 <td className="py-1">
                   {m.windDir.toString().padStart(3, "0")}/{m.windSpeedKts}kt
@@ -120,17 +120,18 @@ export function WeatherPanel({ data }: Props) {
                     <WindBarbSVG dirDeg={m.windDir} speedKts={m.windSpeedKts} />
                   )}
                 </td>
-                <td className="text-right py-1">{m.visibility}SM</td>
-                <td className="text-right py-1">
+                <td className="text-right py-1 text-orange-400 font-mono">{m.visibility}SM</td>
+                <td className="text-right py-1 text-orange-400 font-mono">
                   {m.ceiling != null ? `${m.ceiling}ft` : "-"}
                 </td>
-                <td className="text-right py-1">{m.tempC}&deg;C</td>
+                <td className="text-right py-1 text-orange-400 font-mono">{m.tempC}&deg;C</td>
                 <td className="text-center py-1">
                   <span
-                    className="px-1.5 py-0.5 rounded text-xs font-semibold"
+                    className="px-1.5 py-0.5 rounded text-xs font-semibold border"
                     style={{
-                      backgroundColor: CATEGORY_COLORS[m.flightCategory] + "33",
+                      backgroundColor: CATEGORY_COLORS[m.flightCategory] + "1a",
                       color: CATEGORY_COLORS[m.flightCategory],
+                      borderColor: CATEGORY_COLORS[m.flightCategory] + "40",
                     }}
                   >
                     {m.flightCategory}
@@ -144,12 +145,12 @@ export function WeatherPanel({ data }: Props) {
 
       {/* TAF Display */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">TAFs</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">TAFs</h4>
         {tafs.map((taf, ti) => (
-          <div key={ti} className="bg-gray-800 rounded-lg p-3 mb-2">
+          <div key={ti} className="bg-white/5 rounded-lg p-3 mb-2 border border-cyan-500/10">
             <div className="flex justify-between items-baseline mb-2">
               <span className="font-mono font-semibold">{taf.station}</span>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-gray-400 font-mono">
                 Valid {formatTime(taf.validFrom)} - {formatTime(taf.validTo)}
               </span>
             </div>
@@ -158,7 +159,7 @@ export function WeatherPanel({ data }: Props) {
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-gray-400 border-b border-gray-700">
+                  <tr className="text-gray-400 border-b border-cyan-500/10">
                     <th className="text-left py-1">Type</th>
                     <th className="text-left py-1">From</th>
                     <th className="text-left py-1">To</th>
@@ -169,19 +170,19 @@ export function WeatherPanel({ data }: Props) {
                 </thead>
                 <tbody>
                   {taf.forecasts.map((f, fi) => (
-                    <tr key={fi} className="border-b border-gray-800">
+                    <tr key={fi} className="border-b border-cyan-500/10 hover:bg-white/5">
                       <td className="py-1">
-                        <span className="px-1 py-0.5 bg-gray-700 rounded text-xs">
+                        <span className="px-1 py-0.5 bg-white/5 border border-cyan-500/20 rounded text-xs">
                           {f.changeType}
                         </span>
                       </td>
-                      <td className="py-1">{formatTime(f.from)}</td>
-                      <td className="py-1">{formatTime(f.to)}</td>
+                      <td className="py-1 font-mono">{formatTime(f.from)}</td>
+                      <td className="py-1 font-mono">{formatTime(f.to)}</td>
                       <td className="py-1">
                         {f.windDir.toString().padStart(3, "0")}/{f.windSpeedKts}kt
                       </td>
-                      <td className="text-right py-1">{f.visibility}SM</td>
-                      <td className="text-right py-1">
+                      <td className="text-right py-1 text-orange-400 font-mono">{f.visibility}SM</td>
+                      <td className="text-right py-1 text-orange-400 font-mono">
                         {f.ceiling != null ? `${f.ceiling}ft` : "-"}
                       </td>
                     </tr>
@@ -195,7 +196,7 @@ export function WeatherPanel({ data }: Props) {
 
       {/* PIREP List */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">
           PIREPs ({pireps.length})
         </h4>
         {pireps.length === 0 ? (
@@ -203,22 +204,22 @@ export function WeatherPanel({ data }: Props) {
         ) : (
           <div className="space-y-1">
             {pireps.map((p, i) => (
-              <div key={i} className="bg-gray-800 rounded px-3 py-2">
+              <div key={i} className="bg-white/5 rounded px-3 py-2 border border-cyan-500/10">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-gray-300">
+                  <span className="text-orange-400 font-mono">
                     FL{(p.altitudeFt / 100).toFixed(0).padStart(3, "0")}
                   </span>
-                  <span className="text-xs text-gray-500">{formatTime(p.time)}</span>
+                  <span className="text-xs text-gray-500 font-mono">{formatTime(p.time)}</span>
                 </div>
                 <div className="flex gap-3 mt-1 text-xs">
                   {p.turbulence && (
                     <span
-                      className={`px-1.5 py-0.5 rounded font-semibold ${
+                      className={`px-1.5 py-0.5 rounded font-semibold border ${
                         p.turbulence === "SEV" || p.turbulence === "EXTRM"
-                          ? "bg-red-900/50 text-red-400"
+                          ? "bg-red-500/10 text-red-400 border-red-500/30"
                           : p.turbulence === "MOD"
-                            ? "bg-yellow-900/50 text-yellow-400"
-                            : "bg-green-900/50 text-green-400"
+                            ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
+                            : "bg-green-500/10 text-green-400 border-green-500/30"
                       }`}
                     >
                       TB: {p.turbulence}
@@ -226,12 +227,12 @@ export function WeatherPanel({ data }: Props) {
                   )}
                   {p.icing && (
                     <span
-                      className={`px-1.5 py-0.5 rounded font-semibold ${
+                      className={`px-1.5 py-0.5 rounded font-semibold border ${
                         p.icing === "SEV"
-                          ? "bg-red-900/50 text-red-400"
+                          ? "bg-red-500/10 text-red-400 border-red-500/30"
                           : p.icing === "MOD"
-                            ? "bg-yellow-900/50 text-yellow-400"
-                            : "bg-blue-900/50 text-blue-400"
+                            ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
+                            : "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
                       }`}
                     >
                       IC: {p.icing}

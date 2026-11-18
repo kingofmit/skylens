@@ -35,31 +35,33 @@ export function AltitudeProfileChart({ track }: Props) {
       <AreaChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id="altGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6} />
-            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
+            <stop offset="5%" stopColor="#00e5ff" stopOpacity={0.4} />
+            <stop offset="95%" stopColor="#00e5ff" stopOpacity={0.02} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,229,255,0.08)" />
         <XAxis
           dataKey="distanceNm"
-          tick={{ fill: "#9ca3af", fontSize: 11 }}
-          label={{ value: "Distance (nm)", position: "insideBottom", offset: -2, fill: "#9ca3af", fontSize: 11 }}
+          stroke="#00e5ff"
+          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          label={{ value: "Distance (nm)", position: "insideBottom", offset: -2, fill: "#94a3b8", fontSize: 11 }}
         />
         <YAxis
-          tick={{ fill: "#9ca3af", fontSize: 11 }}
-          label={{ value: "Alt (ft)", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 11 }}
+          stroke="#00e5ff"
+          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          label={{ value: "Alt (ft)", angle: -90, position: "insideLeft", fill: "#94a3b8", fontSize: 11 }}
         />
         <Tooltip
-          contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 6 }}
-          labelStyle={{ color: "#d1d5db" }}
-          itemStyle={{ color: "#93c5fd" }}
+          contentStyle={{ background: 'rgba(0,10,20,0.9)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 8 }}
+          labelStyle={{ color: "#00e5ff" }}
+          itemStyle={{ color: "#ff9100" }}
           formatter={(value: number) => [`${value.toLocaleString()} ft`, "Altitude"]}
           labelFormatter={(v) => `${v} nm`}
         />
         <Area
           type="monotone"
           dataKey="altitudeFt"
-          stroke="#3b82f6"
+          stroke="#00e5ff"
           fill="url(#altGradient)"
           strokeWidth={2}
         />

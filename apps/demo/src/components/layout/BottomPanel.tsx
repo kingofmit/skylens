@@ -16,9 +16,9 @@ export function BottomPanel({ data, selectedFlight, replay }: BottomPanelProps) 
     data.tracks.find((t) => t.icao24 === selectedFlight) ?? data.tracks[0] ?? null;
 
   return (
-    <div className="h-56 bg-gray-800 border-t border-gray-700 flex shrink-0">
+    <div className="h-56 glass-strong border-t border-cyan-500/20 flex shrink-0">
       {/* Left: Replay controls + timeline + PiP */}
-      <div className="w-96 p-3 border-r border-gray-700 flex flex-col gap-2 overflow-y-auto">
+      <div className="w-96 p-3 border-r border-cyan-500/10 flex flex-col gap-2 overflow-y-auto">
         <ReplayControls replay={replay} />
         <Timeline replay={replay} />
         <PiPView replay={replay} tracks={data.tracks} />
@@ -28,7 +28,7 @@ export function BottomPanel({ data, selectedFlight, replay }: BottomPanelProps) 
       <div className="flex-1 p-3 min-w-0">
         {track ? (
           <div className="h-full flex flex-col">
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+            <div className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-1">
               {track.callsign ?? track.icao24} - Altitude Profile
             </div>
             <div className="flex-1 min-h-0">

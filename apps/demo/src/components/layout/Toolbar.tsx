@@ -88,9 +88,9 @@ export function Toolbar({
   }
 
   return (
-    <header className="flex items-center gap-2 px-4 py-2 bg-gray-800 border-b border-gray-700 shrink-0">
+    <header className="glass-strong flex items-center gap-2 px-4 py-2 border-b border-cyan-500/20 shrink-0">
       {/* Logo */}
-      <span className="text-lg font-bold text-blue-400 mr-4 tracking-wide select-none">
+      <span className="text-neon-cyan font-bold text-xl tracking-wider mr-4 select-none">
         SkyLens
       </span>
 
@@ -102,8 +102,8 @@ export function Toolbar({
             onClick={() => onTabChange(t.key)}
             className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
               tab === t.key
-                ? "bg-blue-600 text-white"
-                : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                : "text-gray-400 hover:text-cyan-300 hover:bg-white/5"
             }`}
           >
             {t.label}
@@ -111,27 +111,27 @@ export function Toolbar({
         ))}
       </nav>
 
-      <div className="w-px h-6 bg-gray-600 mx-2" />
+      <div className="w-px h-6 bg-cyan-500/20 mx-2" />
 
       {/* Heatmap dropdown */}
       <div className="relative">
         <button
           onClick={() => { setHeatmapOpen(!heatmapOpen); setExportOpen(false); }}
-          className="px-3 py-1 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+          className="px-3 py-1 rounded text-sm font-medium text-gray-400 hover:text-cyan-300 hover:bg-white/5 transition-colors"
         >
           Heatmap: {HEATMAP_OPTIONS.find((o) => o.key === heatmapMode)?.label}
           <span className="ml-1 text-xs">&#9662;</span>
         </button>
         {heatmapOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-gray-700 rounded shadow-lg border border-gray-600 z-50 min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 glass rounded-lg shadow-2xl shadow-cyan-500/10 z-50 min-w-[120px]">
             {HEATMAP_OPTIONS.map((o) => (
               <button
                 key={o.key}
                 onClick={() => { onHeatmapModeChange(o.key); setHeatmapOpen(false); }}
-                className={`block w-full text-left px-3 py-1.5 text-sm transition-colors ${
+                className={`block w-full text-left px-3 py-1.5 text-sm transition-colors rounded ${
                   heatmapMode === o.key
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-200 hover:bg-gray-600"
+                    ? "bg-cyan-500/20 text-cyan-400"
+                    : "text-gray-300 hover:bg-white/5 hover:text-cyan-300"
                 }`}
               >
                 {o.label}
@@ -146,8 +146,8 @@ export function Toolbar({
         onClick={onToggleAirspace}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
           showAirspace
-            ? "bg-purple-600 text-white"
-            : "text-gray-400 hover:bg-gray-700 hover:text-white"
+            ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+            : "text-gray-400 hover:text-cyan-300 hover:bg-white/5"
         }`}
       >
         Airspace
@@ -157,8 +157,8 @@ export function Toolbar({
         onClick={onToggleTileDebug}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
           showTileDebug
-            ? "bg-green-600 text-white"
-            : "text-gray-400 hover:bg-gray-700 hover:text-white"
+            ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+            : "text-gray-400 hover:text-cyan-300 hover:bg-white/5"
         }`}
       >
         Tile Debug
@@ -170,12 +170,12 @@ export function Toolbar({
       <div className="relative">
         <button
           onClick={() => { setExportOpen(!exportOpen); setHeatmapOpen(false); }}
-          className="px-3 py-1 rounded text-sm font-medium bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors"
+          className="px-3 py-1 rounded text-sm font-medium border border-orange-500/30 text-orange-400 hover:bg-orange-500/10 transition-colors"
         >
           Export <span className="text-xs">&#9662;</span>
         </button>
         {exportOpen && (
-          <div className="absolute top-full right-0 mt-1 bg-gray-700 rounded shadow-lg border border-gray-600 z-50 min-w-[140px]">
+          <div className="absolute top-full right-0 mt-1 glass rounded-lg shadow-2xl shadow-cyan-500/10 z-50 min-w-[140px]">
             {[
               { key: "geojson", label: "GeoJSON" },
               { key: "kml", label: "KML" },
@@ -187,7 +187,7 @@ export function Toolbar({
               <button
                 key={opt.key}
                 onClick={() => handleExport(opt.key)}
-                className="block w-full text-left px-3 py-1.5 text-sm text-gray-200 hover:bg-gray-600 transition-colors"
+                className="block w-full text-left px-3 py-1.5 text-sm text-gray-300 hover:bg-white/5 hover:text-cyan-300 transition-colors rounded"
               >
                 {opt.label}
               </button>

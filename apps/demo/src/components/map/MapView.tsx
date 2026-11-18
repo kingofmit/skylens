@@ -31,7 +31,9 @@ interface MapViewProps {
 const LAYER_IDS = {
   flightPaths: "flight-paths",
   flightPathsPhase: "flight-paths-phase",
+  flightPathsPhaseGlow: "flight-paths-phase-glow",
   aircraft: "aircraft-points",
+  aircraftGlow: "aircraft-glow",
   holding: "holding-markers",
   waypoints: "waypoint-markers",
   waypointLabels: "waypoint-labels",
@@ -42,6 +44,7 @@ const LAYER_IDS = {
   tileDebug: "tile-debug",
   tileDebugOutline: "tile-debug-outline",
   greatCircle: "great-circle-arcs",
+  greatCircleGlow: "great-circle-arcs-glow",
   // Airport
   surfacePaths: "surface-paths",
   runways: "runways",
@@ -55,8 +58,18 @@ const LAYER_IDS = {
   pireps: "pirep-markers",
   // Analytics
   healthPath: "health-path",
+  healthPathGlow: "health-path-glow",
   anomalyMarkers: "anomaly-markers",
 } as const;
+
+/* ── Neon flight colors by callsign ──────────────────────────────── */
+
+const NEON_FLIGHT_COLORS: Record<string, string> = {
+  AAL100: "#00e5ff",   // cyan
+  BAW304: "#39ff14",   // green
+  UAL1234: "#ff9100",  // orange
+};
+const DEFAULT_NEON_COLOR = "#00e5ff";
 
 const ALL_LAYER_IDS = Object.values(LAYER_IDS);
 
@@ -233,52 +246,99 @@ function setupFlightsLayers(
   showTileDebug: boolean,
   arcGeoJSON: GeoJSON.FeatureCollection,
 ) {
-  // Phase-colored flight paths
+  // Phase-colored flight paths with neon glow
   const phaseGJ = getPhaseSegmentedGeoJSON(data.tracks);
-  if (map.getSource(getSourceId(LAYER_IDS.flightPathsPhase))) {
+
+  // Build a maplibre match expression for neon colors by callsign
+  const neonColorParts: (string | string[])[] = [];
+  for (const track of data.tracks) {
+    const cs = track.callsign ?? track.icao24;
+    const color = NEON_FLIGHT_COLORS[cs] ?? DEFAULT_NEON_COLOR;
+    neonColorParts.push(track.icao24, color);
+  }
+  const neonColorExpr = ["match", ["get", "icao24"], ...neonColorParts, DEFAULT_NEON_COLOR] as unknown as maplibregl.ExpressionSpecification;
+
+  if (map.getSource(getSourceId(LAYER_IDS.flightPathsPhaseGlow))) {
+    safeSetData(map, getSourceId(LAYER_IDS.flightPathsPhaseGlow), phaseGJ);
     safeSetData(map, getSourceId(LAYER_IDS.flightPathsPhase), phaseGJ);
   } else {
+    // Glow layer (wider, blurred, underneath)
+    addSourceAndLayer(map, LAYER_IDS.flightPathsPhaseGlow, phaseGJ, {
+      type: "line",
+      paint: {
+        "line-color": neonColorExpr,
+        "line-width": ["case", ["==", ["get", "icao24"], selectedFlight ?? ""], 10, 7],
+        "line-blur": 5,
+        "line-opacity": 0.4,
+      },
+    });
+    // Sharp line on top
     addSourceAndLayer(map, LAYER_IDS.flightPathsPhase, phaseGJ, {
       type: "line",
       paint: {
-        "line-color": ["get", "color"],
-        "line-width": ["case", ["==", ["get", "icao24"], selectedFlight ?? ""], 4, 2],
-        "line-opacity": 0.85,
+        "line-color": neonColorExpr,
+        "line-width": ["case", ["==", ["get", "icao24"], selectedFlight ?? ""], 3, 2],
+        "line-blur": 0,
+        "line-opacity": 0.9,
       },
     });
   }
 
-  // Aircraft position markers
+  // Aircraft position markers with cyan glow
   const pathGJ = getFlightPathGeoJSON(data.tracks, selectedFlight);
   const aircraftGJ: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
     features: pathGJ.features.filter((f) => f.properties?.type === "aircraft"),
   };
-  if (map.getSource(getSourceId(LAYER_IDS.aircraft))) {
+  if (map.getSource(getSourceId(LAYER_IDS.aircraftGlow))) {
+    safeSetData(map, getSourceId(LAYER_IDS.aircraftGlow), aircraftGJ);
     safeSetData(map, getSourceId(LAYER_IDS.aircraft), aircraftGJ);
   } else {
+    // Outer glow circle
+    addSourceAndLayer(map, LAYER_IDS.aircraftGlow, aircraftGJ, {
+      type: "circle",
+      paint: {
+        "circle-radius": ["case", ["==", ["get", "selected"], true], 16, 12],
+        "circle-color": "#00e5ff",
+        "circle-opacity": 0.25,
+        "circle-blur": 1,
+      },
+    });
+    // Inner bright marker
     addSourceAndLayer(map, LAYER_IDS.aircraft, aircraftGJ, {
       type: "circle",
       paint: {
-        "circle-radius": ["case", ["==", ["get", "selected"], true], 8, 5],
-        "circle-color": "#f59e0b",
-        "circle-stroke-width": 2,
+        "circle-radius": ["case", ["==", ["get", "selected"], true], 6, 4],
+        "circle-color": "#00e5ff",
+        "circle-stroke-width": 1.5,
         "circle-stroke-color": "#ffffff",
       },
     });
   }
 
-  // Great-circle arcs
-  if (map.getSource(getSourceId(LAYER_IDS.greatCircle))) {
+  // Great-circle arcs — dashed cyan with glow
+  if (map.getSource(getSourceId(LAYER_IDS.greatCircleGlow))) {
+    safeSetData(map, getSourceId(LAYER_IDS.greatCircleGlow), arcGeoJSON);
     safeSetData(map, getSourceId(LAYER_IDS.greatCircle), arcGeoJSON);
   } else {
+    // Glow layer
+    addSourceAndLayer(map, LAYER_IDS.greatCircleGlow, arcGeoJSON, {
+      type: "line",
+      paint: {
+        "line-color": "#00e5ff",
+        "line-width": 4,
+        "line-blur": 4,
+        "line-opacity": 0.3,
+      },
+    });
+    // Sharp dashed line
     addSourceAndLayer(map, LAYER_IDS.greatCircle, arcGeoJSON, {
       type: "line",
       paint: {
-        "line-color": "#6366f1",
+        "line-color": "#00e5ff",
         "line-width": 1,
         "line-dasharray": [4, 4],
-        "line-opacity": 0.5,
+        "line-opacity": 0.6,
       },
     });
   }
@@ -414,11 +474,12 @@ function setupFlightsLayers(
           "interpolate",
           ["linear"],
           ["heatmap-density"],
-          0, "rgba(0,0,255,0)",
-          0.2, "rgba(0,255,0,0.4)",
-          0.5, "rgba(255,255,0,0.6)",
-          0.8, "rgba(255,128,0,0.8)",
-          1, "rgba(255,0,0,0.9)",
+          0, "rgba(0,0,0,0)",
+          0.2, "rgba(100,20,0,0.4)",
+          0.4, "rgba(180,60,0,0.6)",
+          0.6, "rgba(255,120,0,0.8)",
+          0.8, "rgba(255,180,50,0.9)",
+          1, "rgba(255,240,150,1)",
         ],
       },
     });
@@ -603,15 +664,28 @@ function setupAnalyticsLayers(map: maplibregl.Map, data: SyntheticData) {
     data.flightDNAMetrics,
   );
 
-  // Health-colored path
-  if (map.getSource(getSourceId(LAYER_IDS.healthPath))) {
+  // Health-colored path with glow
+  if (map.getSource(getSourceId(LAYER_IDS.healthPathGlow))) {
+    safeSetData(map, getSourceId(LAYER_IDS.healthPathGlow), markers.healthPath);
     safeSetData(map, getSourceId(LAYER_IDS.healthPath), markers.healthPath);
   } else {
+    // Glow layer follows health color
+    addSourceAndLayer(map, LAYER_IDS.healthPathGlow, markers.healthPath, {
+      type: "line",
+      paint: {
+        "line-color": ["get", "color"],
+        "line-width": 8,
+        "line-blur": 5,
+        "line-opacity": 0.4,
+      },
+    });
+    // Sharp line on top
     addSourceAndLayer(map, LAYER_IDS.healthPath, markers.healthPath, {
       type: "line",
       paint: {
         "line-color": ["get", "color"],
-        "line-width": 4,
+        "line-width": 3,
+        "line-blur": 0,
         "line-opacity": 0.9,
       },
     });

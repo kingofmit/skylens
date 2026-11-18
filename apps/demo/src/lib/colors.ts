@@ -1,18 +1,18 @@
 export const PHASE_COLORS: Record<string, string> = {
   ground: "#6b7280",
-  takeoff: "#f59e0b",
-  climb: "#3b82f6",
-  cruise: "#10b981",
-  descent: "#8b5cf6",
-  approach: "#ec4899",
-  landing: "#ef4444",
+  takeoff: "#ff9100",
+  climb: "#00e5ff",
+  cruise: "#39ff14",
+  descent: "#b388ff",
+  approach: "#ff4081",
+  landing: "#ff5252",
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  VFR: "#10b981",
-  MVFR: "#3b82f6",
-  IFR: "#ef4444",
-  LIFR: "#7c3aed",
+  VFR: "#39ff14",
+  MVFR: "#00e5ff",
+  IFR: "#ff5252",
+  LIFR: "#b388ff",
 };
 
 export const HEATMAP_GRADIENT = [

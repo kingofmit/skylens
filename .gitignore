@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 # Test cache
 .vitest
+
+# Playwright
+.playwright-mcp

@@ -57,12 +57,12 @@ export function ReplayControls({ replay }: Props) {
   );
 
   return (
-    <div className="flex items-center gap-2 bg-gray-800 rounded-lg px-3 py-2">
+    <div className="flex items-center gap-2 glass rounded-lg px-3 py-2 border border-cyan-500/20">
       {/* Transport buttons */}
       <div className="flex items-center gap-1">
         <button
           onClick={handleSeekStart}
-          className="p-1.5 rounded hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-cyan-400 transition-colors"
           title="Go to start (Home)"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
@@ -72,7 +72,11 @@ export function ReplayControls({ replay }: Props) {
 
         <button
           onClick={handlePlayPause}
-          className="p-1.5 rounded hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          className={`p-1.5 rounded transition-colors ${
+            state === "playing"
+              ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-400"
+              : "hover:bg-white/10 text-gray-400 hover:text-cyan-400"
+          }`}
           title={state === "playing" ? "Pause (Space)" : "Play (Space)"}
         >
           {state === "playing" ? (
@@ -88,7 +92,7 @@ export function ReplayControls({ replay }: Props) {
 
         <button
           onClick={handleStop}
-          className="p-1.5 rounded hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-cyan-400 transition-colors"
           title="Stop (Escape)"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
@@ -98,7 +102,7 @@ export function ReplayControls({ replay }: Props) {
 
         <button
           onClick={handleSeekEnd}
-          className="p-1.5 rounded hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-cyan-400 transition-colors"
           title="Go to end (End)"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
@@ -110,7 +114,7 @@ export function ReplayControls({ replay }: Props) {
       {/* Speed */}
       <button
         onClick={handleCycleSpeed}
-        className="text-xs font-mono px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors min-w-[3rem] text-center"
+        className="text-xs font-mono px-2 py-1 rounded glass border border-cyan-500/20 text-cyan-400 hover:bg-white/5 transition-colors min-w-[3rem] text-center"
         title="Click to cycle speed"
       >
         {speed}x
@@ -118,21 +122,24 @@ export function ReplayControls({ replay }: Props) {
 
       {/* Progress bar */}
       <div
-        className="flex-1 h-2 bg-gray-700 rounded-full cursor-pointer relative group"
+        className="flex-1 h-2 bg-white/5 rounded-full cursor-pointer relative group border border-cyan-500/10"
         onClick={handleProgressClick}
       >
         <div
-          className="h-full bg-blue-500 rounded-full transition-all"
-          style={{ width: `${(progress * 100).toFixed(1)}%` }}
+          className="h-full rounded-full transition-all"
+          style={{
+            width: `${(progress * 100).toFixed(1)}%`,
+            background: 'linear-gradient(90deg, #00e5ff, #00e5ff)',
+          }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-orange-400 rounded-full shadow-md shadow-orange-400/30 opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ left: `calc(${(progress * 100).toFixed(1)}% - 6px)` }}
         />
       </div>
 
       {/* Time display */}
-      <span className="text-xs font-mono text-gray-300 min-w-[6rem] text-right">
+      <span className="text-xs text-cyan-400 font-mono min-w-[6rem] text-right">
         {formatTime(time)}
       </span>
     </div>

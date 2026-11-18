@@ -75,7 +75,7 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
     <div className="space-y-4 text-sm">
       {/* Header */}
       <div>
-        <h3 className="text-lg font-semibold">{track.callsign ?? track.icao24}</h3>
+        <h3 className="text-lg font-semibold text-neon-cyan">{track.callsign ?? track.icao24}</h3>
         <p className="text-xs text-gray-400 font-mono">{track.icao24}</p>
         {(track.origin || track.destination) && (
           <p className="text-gray-300 mt-1">
@@ -86,7 +86,7 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
 
       {/* Phase Timeline Bar */}
       <div>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">Phase Timeline</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-1">Phase Timeline</h4>
         <div className="flex h-4 rounded overflow-hidden">
           {phases.map((seg, i) => {
             const width = ((seg.endTime - seg.startTime) / totalDuration) * 100;
@@ -121,27 +121,27 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
 
       {/* Altitude Profile */}
       <div>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">Altitude Profile</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-1">Altitude Profile</h4>
         <AltitudeProfileChart track={track} />
       </div>
 
       {/* Distance & Bearing */}
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-gray-800 rounded-lg p-2">
+        <div className="bg-white/5 rounded-lg p-2 border border-cyan-500/10">
           <span className="text-xs text-gray-400">Direct Distance</span>
-          <p className="font-mono">{directDistNm.toFixed(1)} nm</p>
+          <p className="text-orange-400 font-mono">{directDistNm.toFixed(1)} nm</p>
         </div>
-        <div className="bg-gray-800 rounded-lg p-2">
+        <div className="bg-white/5 rounded-lg p-2 border border-cyan-500/10">
           <span className="text-xs text-gray-400">Bearing</span>
-          <p className="font-mono">{bearingDeg.toFixed(1)}&deg;</p>
+          <p className="text-orange-400 font-mono">{bearingDeg.toFixed(1)}&deg;</p>
         </div>
-        <div className="bg-gray-800 rounded-lg p-2">
+        <div className="bg-white/5 rounded-lg p-2 border border-cyan-500/10">
           <span className="text-xs text-gray-400">Actual Distance</span>
-          <p className="font-mono">{actualDistNm.toFixed(1)} nm</p>
+          <p className="text-orange-400 font-mono">{actualDistNm.toFixed(1)} nm</p>
         </div>
-        <div className="bg-gray-800 rounded-lg p-2">
+        <div className="bg-white/5 rounded-lg p-2 border border-cyan-500/10">
           <span className="text-xs text-gray-400">Efficiency</span>
-          <p className="font-mono">
+          <p className="text-orange-400 font-mono">
             {actualDistNm > 0 ? ((directDistNm / actualDistNm) * 100).toFixed(1) : 0}%
           </p>
         </div>
@@ -149,7 +149,7 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
 
       {/* Holding Patterns */}
       <div>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-1">
           Holding Patterns ({holdingPatterns.length})
         </h4>
         {holdingPatterns.length === 0 ? (
@@ -157,7 +157,7 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
         ) : (
           <div className="space-y-1">
             {holdingPatterns.map((h, i) => (
-              <div key={i} className="bg-gray-800 rounded px-2 py-1 text-xs">
+              <div key={i} className="bg-white/5 rounded px-2 py-1 text-xs border border-cyan-500/10">
                 <span className="text-gray-300">
                   {h.orbits} orbit{h.orbits !== 1 ? "s" : ""} at{" "}
                   {h.centerLat.toFixed(2)}, {h.centerLon.toFixed(2)}
@@ -173,7 +173,7 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
 
       {/* Waypoints */}
       <div>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-1">
           Waypoints Matched ({waypoints.length})
         </h4>
         {waypoints.length === 0 ? (
@@ -181,9 +181,9 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
         ) : (
           <div className="space-y-1">
             {waypoints.map((w, i) => (
-              <div key={i} className="bg-gray-800 rounded px-2 py-1 text-xs flex justify-between">
+              <div key={i} className="bg-white/5 rounded px-2 py-1 text-xs flex justify-between border border-cyan-500/10">
                 <span className="font-mono text-gray-200">{w.fix.name}</span>
-                <span className="text-gray-400">
+                <span className="text-orange-400 font-mono">
                   {(w.distanceM * M_TO_NM).toFixed(1)} nm
                 </span>
               </div>
@@ -193,9 +193,9 @@ export function FlightDetailPanel({ track, waypointFixes, allTracks, boundaries 
       </div>
 
       {/* Spatial Index */}
-      <div className="bg-gray-800 rounded-lg p-2">
+      <div className="bg-white/5 rounded-lg p-2 border border-cyan-500/10">
         <span className="text-xs text-gray-400">Aircraft within 50nm (midpoint)</span>
-        <p className="font-mono">{nearbyCount} state vectors</p>
+        <p className="text-orange-400 font-mono">{nearbyCount} state vectors</p>
       </div>
     </div>
   );

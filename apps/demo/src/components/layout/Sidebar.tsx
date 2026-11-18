@@ -20,7 +20,7 @@ export function Sidebar({ tab, data, selectedFlight, onSelectFlight, replay }: S
   const selectedTrack = data.tracks.find((t) => t.icao24 === selectedFlight) ?? null;
 
   return (
-    <aside className="w-72 bg-gray-800 border-r border-gray-700 overflow-y-auto shrink-0 flex flex-col">
+    <aside className="w-72 glass glow-cyan border-r border-cyan-500/20 overflow-y-auto shrink-0 flex flex-col">
       <div className="p-3 space-y-3">
         {tab === "flights" && (
           <>

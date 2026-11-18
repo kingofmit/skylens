@@ -79,15 +79,15 @@ export function AirportPanel({ data }: Props) {
 
   return (
     <div className="space-y-5 text-sm">
-      <h3 className="text-lg font-semibold">Airport Analysis - KJFK</h3>
+      <h3 className="text-lg font-semibold text-neon-cyan">Airport Analysis - KJFK</h3>
 
       {/* Runway Utilization */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Runway Utilization</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Runway Utilization</h4>
         <RunwayUtilChart utilization={utilization} />
         <table className="w-full text-xs mt-2">
           <thead>
-            <tr className="text-gray-400 border-b border-gray-700">
+            <tr className="text-gray-400 border-b border-cyan-500/10">
               <th className="text-left py-1">Runway</th>
               <th className="text-right py-1">Arrivals</th>
               <th className="text-right py-1">Departures</th>
@@ -96,11 +96,11 @@ export function AirportPanel({ data }: Props) {
           </thead>
           <tbody>
             {Array.from(utilization.entries()).map(([rwy, stats]) => (
-              <tr key={rwy} className="border-b border-gray-800">
+              <tr key={rwy} className="border-b border-cyan-500/10 hover:bg-white/5">
                 <td className="py-1 font-mono">{rwy}</td>
-                <td className="text-right py-1">{stats.arrivals}</td>
-                <td className="text-right py-1">{stats.departures}</td>
-                <td className="text-right py-1 font-semibold">{stats.operations}</td>
+                <td className="text-right py-1 text-orange-400 font-mono">{stats.arrivals}</td>
+                <td className="text-right py-1 text-orange-400 font-mono">{stats.departures}</td>
+                <td className="text-right py-1 font-semibold text-orange-400 font-mono">{stats.operations}</td>
               </tr>
             ))}
           </tbody>
@@ -109,12 +109,12 @@ export function AirportPanel({ data }: Props) {
 
       {/* Taxi Statistics */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Taxi Statistics</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Taxi Statistics</h4>
         <div className="grid grid-cols-5 gap-2">
           {(["mean", "median", "p90", "p95", "max"] as const).map((key) => (
-            <div key={key} className="bg-gray-800 rounded p-2 text-center">
+            <div key={key} className="bg-white/5 rounded p-2 text-center border border-cyan-500/10">
               <span className="text-xs text-gray-400 uppercase block">{key}</span>
-              <span className="font-mono text-sm">{(taxiStats[key] / 60).toFixed(1)}m</span>
+              <span className="text-orange-400 font-mono text-sm">{(taxiStats[key] / 60).toFixed(1)}m</span>
             </div>
           ))}
         </div>
@@ -122,7 +122,7 @@ export function AirportPanel({ data }: Props) {
 
       {/* Gate Assignments */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">
           Gate Assignments ({gateAssignments.length})
         </h4>
         {gateAssignments.length === 0 ? (
@@ -130,7 +130,7 @@ export function AirportPanel({ data }: Props) {
         ) : (
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-gray-400 border-b border-gray-700">
+              <tr className="text-gray-400 border-b border-cyan-500/10">
                 <th className="text-left py-1">Flight</th>
                 <th className="text-right py-1">Arrival</th>
                 <th className="text-right py-1">Departure</th>
@@ -138,10 +138,10 @@ export function AirportPanel({ data }: Props) {
             </thead>
             <tbody>
               {gateAssignments.map((ga, i) => (
-                <tr key={i} className="border-b border-gray-800">
+                <tr key={i} className="border-b border-cyan-500/10 hover:bg-white/5">
                   <td className="py-1 font-mono">{ga.callsign ?? ga.icao24}</td>
-                  <td className="text-right py-1 text-gray-300">{formatTime(ga.arrivalTime)}</td>
-                  <td className="text-right py-1 text-gray-300">
+                  <td className="text-right py-1 text-gray-300 font-mono">{formatTime(ga.arrivalTime)}</td>
+                  <td className="text-right py-1 text-gray-300 font-mono">
                     {ga.departureTime ? formatTime(ga.departureTime) : "-"}
                   </td>
                 </tr>
@@ -153,19 +153,19 @@ export function AirportPanel({ data }: Props) {
 
       {/* Sequencing */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Arrival Sequence</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Arrival Sequence</h4>
         {arrivalSeq.length === 0 ? (
           <p className="text-gray-500 text-xs">No arrivals</p>
         ) : (
           <>
             <div className="flex gap-3 text-xs text-gray-400 mb-1">
-              <span>Mean: {arrivalSpacing.mean.toFixed(0)}s</span>
-              <span>Min: {arrivalSpacing.min.toFixed(0)}s</span>
-              <span>Max: {arrivalSpacing.max.toFixed(0)}s</span>
+              <span>Mean: <span className="text-orange-400 font-mono">{arrivalSpacing.mean.toFixed(0)}s</span></span>
+              <span>Min: <span className="text-orange-400 font-mono">{arrivalSpacing.min.toFixed(0)}s</span></span>
+              <span>Max: <span className="text-orange-400 font-mono">{arrivalSpacing.max.toFixed(0)}s</span></span>
             </div>
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-gray-400 border-b border-gray-700">
+                <tr className="text-gray-400 border-b border-cyan-500/10">
                   <th className="text-left py-1">#</th>
                   <th className="text-left py-1">Flight</th>
                   <th className="text-left py-1">Runway</th>
@@ -174,11 +174,11 @@ export function AirportPanel({ data }: Props) {
               </thead>
               <tbody>
                 {arrivalSeq.map((e) => (
-                  <tr key={e.sequenceNumber} className="border-b border-gray-800">
+                  <tr key={e.sequenceNumber} className="border-b border-cyan-500/10 hover:bg-white/5">
                     <td className="py-1">{e.sequenceNumber}</td>
                     <td className="py-1 font-mono">{e.callsign ?? e.icao24}</td>
                     <td className="py-1 font-mono">{e.runway}</td>
-                    <td className="text-right py-1 text-gray-300">{formatTime(e.time)}</td>
+                    <td className="text-right py-1 text-gray-300 font-mono">{formatTime(e.time)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -188,19 +188,19 @@ export function AirportPanel({ data }: Props) {
       </section>
 
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Departure Sequence</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Departure Sequence</h4>
         {departureSeq.length === 0 ? (
           <p className="text-gray-500 text-xs">No departures</p>
         ) : (
           <>
             <div className="flex gap-3 text-xs text-gray-400 mb-1">
-              <span>Mean: {departureSpacing.mean.toFixed(0)}s</span>
-              <span>Min: {departureSpacing.min.toFixed(0)}s</span>
-              <span>Max: {departureSpacing.max.toFixed(0)}s</span>
+              <span>Mean: <span className="text-orange-400 font-mono">{departureSpacing.mean.toFixed(0)}s</span></span>
+              <span>Min: <span className="text-orange-400 font-mono">{departureSpacing.min.toFixed(0)}s</span></span>
+              <span>Max: <span className="text-orange-400 font-mono">{departureSpacing.max.toFixed(0)}s</span></span>
             </div>
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-gray-400 border-b border-gray-700">
+                <tr className="text-gray-400 border-b border-cyan-500/10">
                   <th className="text-left py-1">#</th>
                   <th className="text-left py-1">Flight</th>
                   <th className="text-left py-1">Runway</th>
@@ -209,11 +209,11 @@ export function AirportPanel({ data }: Props) {
               </thead>
               <tbody>
                 {departureSeq.map((e) => (
-                  <tr key={e.sequenceNumber} className="border-b border-gray-800">
+                  <tr key={e.sequenceNumber} className="border-b border-cyan-500/10 hover:bg-white/5">
                     <td className="py-1">{e.sequenceNumber}</td>
                     <td className="py-1 font-mono">{e.callsign ?? e.icao24}</td>
                     <td className="py-1 font-mono">{e.runway}</td>
-                    <td className="text-right py-1 text-gray-300">{formatTime(e.time)}</td>
+                    <td className="text-right py-1 text-gray-300 font-mono">{formatTime(e.time)}</td>
                   </tr>
                 ))}
               </tbody>

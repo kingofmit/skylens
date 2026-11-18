@@ -54,7 +54,7 @@ export function FlightListPanel({ tracks, selectedFlight, onSelectFlight }: Prop
 
   return (
     <div className="space-y-1">
-      <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider px-1 mb-2">
+      <h3 className="text-cyan-400 text-xs uppercase tracking-widest font-semibold px-1 mb-2">
         Flights ({tracks.length})
       </h3>
       {summaries.map((s) => {
@@ -65,8 +65,8 @@ export function FlightListPanel({ tracks, selectedFlight, onSelectFlight }: Prop
             onClick={() => onSelectFlight(s.icao24)}
             className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
               isSelected
-                ? "bg-blue-600/30 border border-blue-500/50"
-                : "bg-gray-800 hover:bg-gray-700 border border-transparent"
+                ? "bg-cyan-500/20 border border-cyan-500/30"
+                : "bg-white/5 hover:bg-white/10 border border-transparent"
             }`}
           >
             <div className="flex items-center justify-between">
@@ -88,8 +88,8 @@ export function FlightListPanel({ tracks, selectedFlight, onSelectFlight }: Prop
             </div>
 
             <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
-              <span>{s.distanceNm.toFixed(0)} nm</span>
-              <span>{s.durationMin.toFixed(0)} min</span>
+              <span className="text-orange-400 font-mono">{s.distanceNm.toFixed(0)} nm</span>
+              <span className="text-orange-400 font-mono">{s.durationMin.toFixed(0)} min</span>
             </div>
           </button>
         );

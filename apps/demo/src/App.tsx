@@ -20,7 +20,7 @@ export function App() {
   const replay = useReplay(data.tracks);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-gray-900 text-white">
+    <div className="h-screen w-screen flex flex-col bg-black text-white">
       <Toolbar
         tab={tab}
         onTabChange={setTab}

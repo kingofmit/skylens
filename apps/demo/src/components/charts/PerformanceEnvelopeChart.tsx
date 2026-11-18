@@ -41,36 +41,37 @@ export function PerformanceEnvelopeChart({ metrics, param }: Props) {
       <ComposedChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id="envGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0.05} />
+            <stop offset="5%" stopColor="#39ff14" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#39ff14" stopOpacity={0.02} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,229,255,0.08)" />
         <XAxis
           dataKey="time"
           tickFormatter={formatTime}
-          tick={{ fill: "#9ca3af", fontSize: 11 }}
+          stroke="#00e5ff"
+          tick={{ fill: "#94a3b8", fontSize: 11 }}
         />
-        <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} />
+        <YAxis stroke="#00e5ff" tick={{ fill: "#94a3b8", fontSize: 11 }} />
         <Tooltip
-          contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 6 }}
+          contentStyle={{ background: 'rgba(0,10,20,0.9)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 8 }}
           labelFormatter={(v) => formatTime(v as number)}
           formatter={(value: number, name: string) => [value.toFixed(1), name]}
         />
         <Area type="monotone" dataKey="max" stroke="none" fill="url(#envGradient)" />
-        <Area type="monotone" dataKey="min" stroke="none" fill="#1f2937" />
-        <Line type="monotone" dataKey="max" stroke="#10b981" strokeDasharray="4 4" dot={false} strokeWidth={1} name="Max" />
-        <Line type="monotone" dataKey="min" stroke="#10b981" strokeDasharray="4 4" dot={false} strokeWidth={1} name="Min" />
+        <Area type="monotone" dataKey="min" stroke="none" fill="rgba(0,10,20,0.9)" />
+        <Line type="monotone" dataKey="max" stroke="#39ff14" strokeDasharray="4 4" dot={false} strokeWidth={1} name="Max" />
+        <Line type="monotone" dataKey="min" stroke="#39ff14" strokeDasharray="4 4" dot={false} strokeWidth={1} name="Min" />
         <Line
           type="monotone"
           dataKey="value"
-          stroke="#f59e0b"
+          stroke="#ff9100"
           dot={(props: any) => {
             const { cx, cy, payload } = props;
             if (payload.exceedsEnvelope) {
-              return <circle cx={cx} cy={cy} r={4} fill="#ef4444" stroke="#ef4444" />;
+              return <circle cx={cx} cy={cy} r={4} fill="#ff5252" stroke="#ff5252" />;
             }
-            return <circle cx={cx} cy={cy} r={2} fill="#f59e0b" stroke="#f59e0b" />;
+            return <circle cx={cx} cy={cy} r={2} fill="#ff9100" stroke="#ff9100" />;
           }}
           strokeWidth={2}
           name={param}

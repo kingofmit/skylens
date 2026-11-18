@@ -106,11 +106,11 @@ export function AnalyticsPanel({ data }: Props) {
 
   return (
     <div className="space-y-5 text-sm">
-      <h3 className="text-lg font-semibold">Analytics</h3>
+      <h3 className="text-lg font-semibold text-neon-cyan">Analytics</h3>
 
       {/* FlightDNA Health */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">FlightDNA Health</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">FlightDNA Health</h4>
         <div className="flex flex-wrap gap-1">
           {healthBadges.map((h, i) => (
             <span
@@ -127,7 +127,7 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Anomaly Events */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">
           Anomaly Events ({anomalyMarkers.length})
         </h4>
         {anomalyMarkers.length === 0 ? (
@@ -135,9 +135,9 @@ export function AnalyticsPanel({ data }: Props) {
         ) : (
           <div className="space-y-1 max-h-40 overflow-y-auto">
             {anomalyMarkers.map((m, i) => (
-              <div key={i} className="bg-gray-800 rounded px-2 py-1 text-xs flex justify-between">
+              <div key={i} className="bg-white/5 rounded px-2 py-1 text-xs flex justify-between border border-cyan-500/10">
                 <span className="text-red-400 font-mono">{m.label}</span>
-                <span className="text-gray-500">{formatTime(m.time)}</span>
+                <span className="text-gray-500 font-mono">{formatTime(m.time)}</span>
               </div>
             ))}
           </div>
@@ -147,11 +147,11 @@ export function AnalyticsPanel({ data }: Props) {
       {/* Performance Envelope */}
       <section>
         <div className="flex items-center gap-2 mb-2">
-          <h4 className="text-xs font-semibold text-gray-400 uppercase">Performance Envelope</h4>
+          <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold">Performance Envelope</h4>
           <select
             value={envelopeParam}
             onChange={(e) => setEnvelopeParam(e.target.value)}
-            className="bg-gray-700 text-white text-xs rounded px-2 py-0.5 border border-gray-600"
+            className="bg-white/5 text-white text-xs rounded px-2 py-0.5 border border-cyan-500/20"
           >
             {envelopeParams.map((p) => (
               <option key={p} value={p}>
@@ -165,18 +165,18 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Congestion Scores */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Congestion Scores</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Congestion Scores</h4>
         <div className="space-y-1">
           {congestionScores.map((cs, i) => (
-            <div key={i} className="bg-gray-800 rounded px-3 py-2 flex justify-between items-center">
+            <div key={i} className="bg-white/5 rounded px-3 py-2 flex justify-between items-center border border-cyan-500/10">
               <span className="text-gray-300 text-xs">
                 Region {i + 1}: {cs.bbox.minLat.toFixed(1)}-{cs.bbox.maxLat.toFixed(1)}N,{" "}
                 {cs.bbox.minLon.toFixed(1)}-{cs.bbox.maxLon.toFixed(1)}E
               </span>
               <div className="text-right">
-                <span className="font-mono text-sm">{cs.aircraftCount}</span>
+                <span className="text-orange-400 font-mono text-sm">{cs.aircraftCount}</span>
                 <span className="text-xs text-gray-500 ml-1">aircraft</span>
-                <span className="text-xs text-gray-400 ml-2">score: {cs.score.toFixed(2)}</span>
+                <span className="text-xs text-cyan-400 ml-2">score: {cs.score.toFixed(2)}</span>
               </div>
             </div>
           ))}
@@ -185,18 +185,18 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Congestion Time Series */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Congestion Over Time</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Congestion Over Time</h4>
         <CongestionChart states={allStates} regions={data.congestionRegions} />
       </section>
 
       {/* Sector Density */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Sector Density</h4>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Sector Density</h4>
         <div className="grid grid-cols-3 gap-2">
           {data.airspaceBoundaries.map((b) => (
-            <div key={b.id} className="bg-gray-800 rounded p-2 text-center">
+            <div key={b.id} className="bg-white/5 rounded p-2 text-center border border-cyan-500/10">
               <span className="text-xs text-gray-400 block">{b.name}</span>
-              <span className="font-mono text-lg">{sectorCounts.get(b.id) ?? 0}</span>
+              <span className="text-orange-400 font-mono text-lg">{sectorCounts.get(b.id) ?? 0}</span>
               <span className="text-xs text-gray-500 block">aircraft</span>
             </div>
           ))}
@@ -205,11 +205,11 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Typed Array Demo */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Typed Array Round-Trip</h4>
-        <div className="bg-gray-800 rounded p-3 text-xs font-mono space-y-1">
-          <p>Input: {typedArrayDemo.input} state vectors</p>
-          <p>Output: {typedArrayDemo.output} state vectors</p>
-          <p>Time: {typedArrayDemo.elapsedMs.toFixed(2)}ms</p>
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Typed Array Round-Trip</h4>
+        <div className="bg-white/5 rounded p-3 text-xs font-mono space-y-1 border border-cyan-500/10">
+          <p>Input: <span className="text-orange-400">{typedArrayDemo.input}</span> state vectors</p>
+          <p>Output: <span className="text-orange-400">{typedArrayDemo.output}</span> state vectors</p>
+          <p>Time: <span className="text-orange-400">{typedArrayDemo.elapsedMs.toFixed(2)}ms</span></p>
           <p className={typedArrayDemo.input === typedArrayDemo.output ? "text-green-400" : "text-red-400"}>
             {typedArrayDemo.input === typedArrayDemo.output ? "Round-trip OK" : "MISMATCH"}
           </p>
@@ -218,16 +218,16 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Mercator Demo */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Mercator Round-Trip</h4>
-        <div className="bg-gray-800 rounded p-3 text-xs font-mono space-y-1">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Mercator Round-Trip</h4>
+        <div className="bg-white/5 rounded p-3 text-xs font-mono space-y-1 border border-cyan-500/10">
           <p>
-            Original: {mercatorDemo.original.lat.toFixed(6)}, {mercatorDemo.original.lon.toFixed(6)}
+            Original: <span className="text-orange-400">{mercatorDemo.original.lat.toFixed(6)}, {mercatorDemo.original.lon.toFixed(6)}</span>
           </p>
           <p>
-            Projected: x={mercatorDemo.projected.x.toFixed(2)}, y={mercatorDemo.projected.y.toFixed(2)}
+            Projected: <span className="text-orange-400">x={mercatorDemo.projected.x.toFixed(2)}, y={mercatorDemo.projected.y.toFixed(2)}</span>
           </p>
           <p>
-            Inverted: {mercatorDemo.inverted.lat.toFixed(6)}, {mercatorDemo.inverted.lon.toFixed(6)}
+            Inverted: <span className="text-orange-400">{mercatorDemo.inverted.lat.toFixed(6)}, {mercatorDemo.inverted.lon.toFixed(6)}</span>
           </p>
           <p
             className={
@@ -245,14 +245,14 @@ export function AnalyticsPanel({ data }: Props) {
 
       {/* Point-in-Polygon */}
       <section>
-        <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Point-in-Polygon Check</h4>
-        <div className="bg-gray-800 rounded p-3 text-xs font-mono space-y-1">
+        <h4 className="text-cyan-400 text-xs uppercase tracking-wider font-semibold mb-2">Point-in-Polygon Check</h4>
+        <div className="bg-white/5 rounded p-3 text-xs font-mono space-y-1 border border-cyan-500/10">
           <p>
-            Point: {pipDemo.lat.toFixed(2)}, {pipDemo.lon.toFixed(2)} @ FL{pipDemo.altFl}
+            Point: <span className="text-orange-400">{pipDemo.lat.toFixed(2)}, {pipDemo.lon.toFixed(2)} @ FL{pipDemo.altFl}</span>
           </p>
-          <p>Containing sectors: {pipDemo.sectors.length}</p>
+          <p>Containing sectors: <span className="text-orange-400">{pipDemo.sectors.length}</span></p>
           {pipDemo.sectors.map((s) => (
-            <p key={s.id} className="text-blue-400 ml-2">
+            <p key={s.id} className="text-cyan-400 ml-2">
               {s.name} ({s.id})
             </p>
           ))}

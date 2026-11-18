@@ -16,7 +16,7 @@ interface Props {
   regions: BoundingBox[];
 }
 
-const REGION_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+const REGION_COLORS = ["#00e5ff", "#39ff14", "#ff9100", "#ff5252", "#b388ff"];
 
 function formatTime(ts: number): string {
   const d = new Date(ts * 1000);
@@ -57,15 +57,16 @@ export function CongestionChart({ states, regions }: Props) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,229,255,0.08)" />
         <XAxis
           dataKey="time"
           tickFormatter={formatTime}
-          tick={{ fill: "#9ca3af", fontSize: 11 }}
+          stroke="#00e5ff"
+          tick={{ fill: "#94a3b8", fontSize: 11 }}
         />
-        <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} />
+        <YAxis stroke="#00e5ff" tick={{ fill: "#94a3b8", fontSize: 11 }} />
         <Tooltip
-          contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 6 }}
+          contentStyle={{ background: 'rgba(0,10,20,0.9)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 8 }}
           labelFormatter={(v) => formatTime(v as number)}
         />
         {regionKeys.map((key, i) => (

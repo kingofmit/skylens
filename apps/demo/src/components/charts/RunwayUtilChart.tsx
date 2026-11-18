@@ -30,15 +30,15 @@ export function RunwayUtilChart({ utilization }: Props) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis dataKey="runway" tick={{ fill: "#9ca3af", fontSize: 11 }} />
-        <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} allowDecimals={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,229,255,0.08)" />
+        <XAxis dataKey="runway" stroke="#00e5ff" tick={{ fill: "#94a3b8", fontSize: 11 }} />
+        <YAxis stroke="#00e5ff" tick={{ fill: "#94a3b8", fontSize: 11 }} allowDecimals={false} />
         <Tooltip
-          contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 6 }}
+          contentStyle={{ background: 'rgba(0,10,20,0.9)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 8 }}
         />
-        <Legend wrapperStyle={{ fontSize: 12, color: "#d1d5db" }} />
-        <Bar dataKey="arrivals" fill="#3b82f6" name="Arrivals" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="departures" fill="#10b981" name="Departures" radius={[4, 4, 0, 0]} />
+        <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+        <Bar dataKey="arrivals" fill="#00e5ff" name="Arrivals" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="departures" fill="#39ff14" name="Departures" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
