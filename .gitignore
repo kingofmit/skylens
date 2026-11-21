@@ -27,3 +27,11 @@ pnpm-debug.log*
 
 # Playwright
 .playwright-mcp
+
+# AI tools
+.claude/
+.cursor/
+.aider/
+.continue/
+.copilot/
+AGENTS.md
